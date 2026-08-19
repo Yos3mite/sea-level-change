@@ -251,7 +251,12 @@ def _trend_rows(
     return results, warnings
 
 
-def write_run_outputs(run: PipelineRun, output_dir: str | Path, config: PipelineConfig) -> None:
+def write_run_outputs(
+    run: PipelineRun,
+    output_dir: str | Path,
+    config: PipelineConfig,
+    report_run_id: str | None = None,
+) -> None:
     destination = Path(output_dir)
     destination.mkdir(parents=True, exist_ok=False)
     dataset = _monthly_dataset(run.series)
@@ -282,7 +287,7 @@ def write_run_outputs(run: PipelineRun, output_dir: str | Path, config: Pipeline
     write_diagnostics(run.series, destination / "diagnostics.png")
     write_run_report(
         destination / "run_report.md",
-        destination.name,
+        report_run_id or destination.name,
         config.sha256(),
         trends,
         False,
@@ -330,7 +335,7 @@ def run_pipeline(config: PipelineConfig) -> Path:
     )
     staging = output_root / f".{run_id}.tmp-{uuid4().hex}"
     try:
-        write_run_outputs(run, staging, config)
+        write_run_outputs(run, staging, config, report_run_id=run_id)
         staging.replace(destination)
     except Exception:
         if staging.exists():

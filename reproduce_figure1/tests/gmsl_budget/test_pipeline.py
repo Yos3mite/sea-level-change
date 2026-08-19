@@ -111,6 +111,8 @@ def test_pipeline_writes_netcdf_under_unicode_run_path(tmp_path, monkeypatch):
     run_dir = run_pipeline(config)
     with xr.open_dataset(run_dir / "monthly_budget.nc", engine="scipy") as dataset:
         assert "obd" in dataset
+    report = (run_dir / "run_report.md").read_text(encoding="utf-8")
+    assert "# GMSL budget run `海平面结果`" in report
 
 
 def test_default_run_identity_includes_processing_source_hash():
