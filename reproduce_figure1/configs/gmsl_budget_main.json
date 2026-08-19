@@ -1,0 +1,35 @@
+{
+  "cmems_sla_path": "D:/temp_sealevel_data/cmems_sla_monthly.nc",
+  "cmems_indicator_path": "D:/temp_sealevel_data/cmems_gmsl_indicator.nc",
+  "cdt_land_mask_path": "D:/AAAA海平面变化/主要资料整理/风应力计算/wind/cdt/cdt_data/land_mask.mat",
+  "cdt_distance_path": "D:/AAAA海平面变化/主要资料整理/风应力计算/wind/cdt/cdt_data/distance2coast.mat",
+  "sagea_root": "D:/AAAA海平面变化/SaGEA-main(L2-L3)/SaGEA-main",
+  "grace_gfc_dir": "D:/temp_sealevel_data/grace_csr_ddk1",
+  "output_root": "D:/AAAA海平面变化/reproduce_figure1/output/optimized_budget",
+  "start_month": "2013-11",
+  "end_month": "2024-10",
+  "gia_mode": "scalar",
+  "altimetry_gia_rate_mm_per_year": 0.30,
+  "rho_freshwater_kg_m3": 1000.0,
+  "rho_seawater_kg_m3": 1028.0,
+  "min_valid_weight_fraction": 0.995,
+  "hac_lags": 12,
+  "coastal_buffer_km": 300.0,
+  "grid_spacing_degrees": 0.25,
+  "mass_preprocessing": {
+    "release": "CSR RL06/RL06.3",
+    "filter": "DDK1",
+    "gia": "Caron2018",
+    "degree_1": "TN13",
+    "c20_c30": "TN14"
+  },
+  "obd_preprocessing": {
+    "release": "CSR RL06/RL06.3",
+    "filter": "DDK1",
+    "gia": "Caron2018",
+    "degree_1": "TN13",
+    "c20_c30": "TN14"
+  },
+  "steric_path": null,
+  "run_id": null
+}

@@ -1,0 +1,16 @@
+[project]
+name = "gmsl-budget"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = [
+  "matplotlib>=3.8",
+  "numpy>=1.26",
+  "pandas>=2.2",
+  "scipy>=1.13",
+  "statsmodels>=0.14",
+  "xarray>=2023.6",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
