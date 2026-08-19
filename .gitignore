@@ -1,0 +1,11 @@
+.worktrees/
+__pycache__/
+.pytest_cache/
+*.py[cod]
+*.nc
+*.gfc
+*.zip
+*.npy
+*.npz
+reproduce_figure1/output/optimized_budget/
+reproduce_figure1/data/external/
