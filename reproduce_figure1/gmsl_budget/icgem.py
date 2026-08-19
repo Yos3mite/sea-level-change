@@ -146,7 +146,7 @@ def discover_gfc_downloads(
     end_period = pd.Period(end_month, freq="M")
     if start_period > end_period:
         raise ValueError("start_month must not be after end_month")
-    discovered: dict[str, DownloadSpec] = {}
+    discovered: dict[pd.Period, tuple[tuple[int, int, str], DownloadSpec]] = {}
     for page in series_pages:
         parser = _LinkParser()
         parser.feed(_read_url(page).decode("utf-8", errors="replace"))
@@ -159,13 +159,17 @@ def discover_gfc_downloads(
             ):
                 continue
             try:
-                _, _, midpoint = epoch_dates_from_filename(filename)
+                epoch_start, epoch_end, midpoint = epoch_dates_from_filename(filename)
             except ValueError:
                 continue
             midpoint_period = pd.Period(midpoint, freq="M")
             if start_period <= midpoint_period <= end_period:
-                discovered[filename] = DownloadSpec(urljoin(page, href), filename, page)
-    return [discovered[name] for name in sorted(discovered)]
+                target = date(midpoint.year, midpoint.month, 15)
+                score = (abs((midpoint - target).days), -(epoch_end - epoch_start).days, filename)
+                candidate = DownloadSpec(urljoin(page, href), filename, page)
+                if midpoint_period not in discovered or score < discovered[midpoint_period][0]:
+                    discovered[midpoint_period] = (score, candidate)
+    return [discovered[period][1] for period in sorted(discovered)]
 
 
 def _validate_gfc_bytes(content: bytes) -> None:

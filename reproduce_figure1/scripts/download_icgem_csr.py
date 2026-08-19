@@ -17,6 +17,7 @@ SERIES_PAGES = (
 )
 SOURCE_METADATA = {
     "solution_code": "BA01 (unconstrained degree/order 60; BB01 degree/order 96 excluded)",
+    "duplicate_month_rule": "retain the BA01 arc whose epoch midpoint is closest to day 15; prefer longer arc on ties",
     "GRACE": {"release": "CSR RL06", "license": "CC BY 4.0"},
     "GRACE-FO": {
         "release": "CSR RL06.3",

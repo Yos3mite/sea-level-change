@@ -49,6 +49,7 @@ def test_discovery_filters_ddk1_and_epoch_midpoint(tmp_path):
     html.write_text(
         """
         <a href="files/kfilter_DDK1_GSM-2_2018275-2018305_GRFO_UTCSR_BA01_0603.gfc">oct</a>
+        <a href="files/kfilter_DDK1_GSM-2_2018286-2018316_GRFO_UTCSR_BA01_0603.gfc">oct-late-duplicate</a>
         <a href="files/kfilter_DDK1_GSM-2_2018275-2018305_GRFO_UTCSR_BB01_0603.gfc">oct-degree96</a>
         <a href="files/kfilter_DDK2_GSM-2_2018306-2018335_GRFO_UTCSR_BA01_0603.gfc">nov-ddk2</a>
         <a href="files/kfilter_DDK1_GSM-2_2018306-2018335_GRFO_UTCSR_BA01_0603.gfc">nov</a>
