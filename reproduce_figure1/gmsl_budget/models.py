@@ -28,7 +28,9 @@ class MonthlySeries:
         months = time.to_period("M")
         if months.duplicated().any():
             raise ValueError("duplicate month in MonthlySeries")
-        normalized_time = months.to_timestamp(how="start") + pd.Timedelta(days=14)
+        normalized_time = pd.DatetimeIndex(
+            months.to_timestamp(how="start") + pd.Timedelta(days=14),
+        ).rename(None)
         values = _readonly_float64(self.values)
         if values.shape != (len(normalized_time),):
             raise ValueError("values must have shape (time,)")

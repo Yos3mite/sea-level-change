@@ -18,7 +18,7 @@ def _is_already_corrected(series: MonthlySeries) -> bool:
 
 def apply_scalar_gia(
     series: MonthlySeries,
-    rate_mm_per_year: float = 0.30,
+    rate_mm_per_year: float = -0.30,
     reference_time: pd.Timestamp | None = None,
 ) -> MonthlySeries:
     if series.units != "mm":
@@ -37,11 +37,39 @@ def apply_scalar_gia(
             "gia_mode": "scalar",
             "gia_rate_mm_per_year": float(rate_mm_per_year),
             "gia_reference_time": reference.isoformat(),
-            "gia_sign_convention": "positive rate increases corrected GMSL trend",
+            "gia_sign_convention": "signed rate is added to the parent series",
             "parent_series": series.name,
         }
     )
     return MonthlySeries(series.time, corrected, "gmsl_gia_corrected", "mm", metadata)
+
+
+def apply_piecewise_trend_correction(
+    series: MonthlySeries,
+    rate_mm_per_year: float,
+    start_time: pd.Timestamp,
+    correction_name: str,
+) -> MonthlySeries:
+    if series.units != "mm":
+        raise ValueError("trend correction requires millimetres (mm)")
+    if not np.isfinite(rate_mm_per_year):
+        raise ValueError("trend correction rate must be finite")
+    if not correction_name:
+        raise ValueError("correction_name must not be empty")
+    start = pd.Timestamp(start_time)
+    elapsed = decimal_year(series.time) - decimal_year(pd.DatetimeIndex([start]))[0]
+    correction = float(rate_mm_per_year) * np.maximum(elapsed, 0.0)
+    metadata = dict(series.metadata)
+    metadata.update(
+        {
+            "trend_correction_name": correction_name,
+            "trend_correction_rate_mm_per_year": float(rate_mm_per_year),
+            "trend_correction_start_time": start.isoformat(),
+            "trend_correction_sign_convention": "signed rate is added after the start time",
+            "parent_series": series.name,
+        }
+    )
+    return MonthlySeries(series.time, series.values + correction, f"{series.name}_{correction_name}", "mm", metadata)
 
 
 def area_average_spatial_gia(gia_rate_grid: xr.DataArray, mask: SpatialMask) -> float:

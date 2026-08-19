@@ -15,13 +15,20 @@ import xarray as xr
 
 from .cmems import build_altimetry_mask, read_cmems_gmsl
 from .config import PipelineConfig
-from .gia import apply_scalar_gia
+from .figure1_mass import build_ssa_ensemble
+from .gia import apply_piecewise_trend_correction, apply_scalar_gia
+from .grace import read_gsfc_sla_mascon_series, read_mascon_ocean_series
 from .icgem import parse_gfc
-from .masks import buffer_ocean_mask, load_cdt_coast_distance, load_cdt_ocean_fraction
+from .masks import (
+    buffer_ocean_mask,
+    load_cdt_coast_distance,
+    load_cdt_ocean_fraction,
+    resample_mask_nearest,
+)
 from .models import MonthlySeries, SpatialMask, TrendResult
 from .obd import area_average_mass_and_obd, preprocess_grace_coefficients
 from .provenance import sha256_file, sha256_mask, software_versions, write_json
-from .report import write_diagnostics, write_run_report
+from .report import write_diagnostics, write_mass_figure, write_run_report
 from .trend import fit_trend
 
 
@@ -45,7 +52,13 @@ def _input_inventory(config: PipelineConfig) -> tuple[dict[str, str], str]:
         config.sagea_root / "data" / "auxiliary" / "LoveNumber.mat",
         *sorted(config.grace_gfc_dir.glob("*.gfc")),
     ]
-    for optional in (config.cmems_indicator_path, config.steric_path):
+    for optional in (
+        config.cmems_indicator_path,
+        config.steric_path,
+        config.csr_mascon_path,
+        config.jpl_mascon_path,
+        config.gsfc_sla_mascon_path,
+    ):
         if optional is not None:
             candidates.append(optional)
     inventory = {
@@ -104,6 +117,59 @@ def _open_sla_for_mask(config: PipelineConfig) -> xr.DataArray:
         dataset.close()
 
 
+def _subset_months(series: MonthlySeries, start_month: str, end_month: str, name: str | None = None) -> MonthlySeries:
+    periods = series.time.to_period("M")
+    keep = (periods >= pd.Period(start_month, "M")) & (periods <= pd.Period(end_month, "M"))
+    if not np.any(keep):
+        raise ValueError(f"{series.name} does not overlap {start_month} through {end_month}")
+    return MonthlySeries(
+        series.time[keep],
+        series.values[keep],
+        name or series.name,
+        series.units,
+        series.metadata,
+    )
+
+
+def _renamed(series: MonthlySeries, name: str, **metadata: Any) -> MonthlySeries:
+    return MonthlySeries(series.time, series.values, name, series.units, {**series.metadata, **metadata})
+
+
+def _read_mascon_centers(config: PipelineConfig, mask: SpatialMask) -> dict[str, MonthlySeries]:
+    paths = (config.csr_mascon_path, config.jpl_mascon_path, config.gsfc_sla_mascon_path)
+    if any(path is None for path in paths):
+        raise ValueError("CSR, JPL, and GSFC Mascon paths must all be supplied together")
+    return {
+        "CSR": _subset_months(
+            read_mascon_ocean_series(
+                config.csr_mascon_path, "CSR", mask,
+                rho_freshwater=config.rho_freshwater_kg_m3,
+                rho_seawater=config.rho_seawater_kg_m3,
+            ),
+            config.start_month,
+            config.end_month,
+        ),
+        "JPL": _subset_months(
+            read_mascon_ocean_series(
+                config.jpl_mascon_path, "JPL", mask,
+                rho_freshwater=config.rho_freshwater_kg_m3,
+                rho_seawater=config.rho_seawater_kg_m3,
+            ),
+            config.start_month,
+            config.end_month,
+        ),
+        "GSFC": _subset_months(
+            read_gsfc_sla_mascon_series(
+                config.gsfc_sla_mascon_path, mask,
+                rho_freshwater=config.rho_freshwater_kg_m3,
+                rho_seawater=config.rho_seawater_kg_m3,
+            ),
+            config.start_month,
+            config.end_month,
+        ),
+    }
+
+
 def _compute_run(config: PipelineConfig) -> PipelineRun:
     if config.steric_path is not None:
         raise NotImplementedError("qualified steric ingestion is intentionally deferred")
@@ -135,7 +201,13 @@ def _compute_run(config: PipelineConfig) -> PipelineRun:
     raw_global = MonthlySeries(
         raw_global.time[wanted], raw_global.values[wanted], "gmsl_raw", "mm", {**raw_global.metadata, "mask_hash": altimetry_mask.metadata["sha256"]}
     )
-    corrected_global = apply_scalar_gia(raw_global, config.altimetry_gia_rate_mm_per_year)
+    wet_global = apply_piecewise_trend_correction(
+        raw_global,
+        config.wet_tropo_rate_mm_per_year,
+        pd.Period(config.wet_tropo_start_month, "M").to_timestamp() + pd.Timedelta(days=14),
+        "wet_tropo_corrected",
+    )
+    corrected_global = apply_scalar_gia(wet_global, config.altimetry_gia_rate_mm_per_year)
     common_wanted = (raw_common_base.time.to_period("M") >= pd.Period(config.start_month, "M")) & (
         raw_common_base.time.to_period("M") <= pd.Period(config.end_month, "M")
     )
@@ -146,11 +218,17 @@ def _compute_run(config: PipelineConfig) -> PipelineRun:
         "mm",
         {**raw_common_base.metadata, "mask_hash": budget_mask.metadata["sha256"]},
     )
-    corrected_common_base = apply_scalar_gia(raw_common, config.altimetry_gia_rate_mm_per_year)
+    wet_common = apply_piecewise_trend_correction(
+        raw_common,
+        config.wet_tropo_rate_mm_per_year,
+        pd.Period(config.wet_tropo_start_month, "M").to_timestamp() + pd.Timedelta(days=14),
+        "wet_tropo_corrected",
+    )
+    corrected_common_base = apply_scalar_gia(wet_common, config.altimetry_gia_rate_mm_per_year)
     corrected_common = MonthlySeries(
         corrected_common_base.time,
         corrected_common_base.values,
-        "gmsl_budget_common_gia_corrected",
+        "gmsl_budget_common_wet_gia_corrected",
         "mm",
         corrected_common_base.metadata,
     )
@@ -169,12 +247,53 @@ def _compute_run(config: PipelineConfig) -> PipelineRun:
         config.rho_freshwater_kg_m3,
         config.rho_seawater_kg_m3,
     )
+    mass_shc = _renamed(
+        mass,
+        "ocean_mass_csr_shc_300km",
+        role="OBD source consistency diagnostic; not the Jin Mascon ensemble",
+    )
+
+    masks: dict[str, SpatialMask] = {
+        "altimetry_global": altimetry_mask,
+        "budget_common": budget_mask,
+    }
+    mascon_series: dict[str, MonthlySeries] = {}
+    mascon_paths = (config.csr_mascon_path, config.jpl_mascon_path, config.gsfc_sla_mascon_path)
+    if any(path is not None for path in mascon_paths):
+        spacing = config.mascon_grid_spacing_degrees
+        target_latitude = np.arange(-90.0 + spacing / 2.0, 90.0, spacing)
+        target_longitude = np.arange(spacing / 2.0, 360.0, spacing)
+        mascon_global = _mask_with_hash(
+            resample_mask_nearest(altimetry_mask, target_latitude, target_longitude, "mascon_global_1deg"),
+            "mascon_global_1deg",
+        )
+        mascon_300km = _mask_with_hash(
+            resample_mask_nearest(budget_mask, target_latitude, target_longitude, "mascon_300km_sensitivity"),
+            "mascon_300km_sensitivity",
+        )
+        masks.update({"mascon_global_1deg": mascon_global, "mascon_300km_sensitivity": mascon_300km})
+        observed_global = _read_mascon_centers(config, mascon_global)
+        filled_global, ensemble_global = build_ssa_ensemble(
+            observed_global, config.start_month, config.end_month
+        )
+        observed_300km = _read_mascon_centers(config, mascon_300km)
+        _, ensemble_300km = build_ssa_ensemble(observed_300km, config.start_month, config.end_month)
+        mascon_series.update({item.name: item for item in observed_global.values()})
+        mascon_series.update({item.name: item for item in filled_global.values()})
+        mascon_series[ensemble_global.name] = ensemble_global
+        sensitivity = _renamed(
+            ensemble_300km,
+            "ocean_mass_ensemble_300km_sensitivity",
+            result_role="sensitivity only; not the Jin main domain",
+        )
+        mascon_series[sensitivity.name] = sensitivity
 
     input_paths = [
         config.cmems_sla_path,
         config.cdt_land_mask_path,
         config.cdt_distance_path,
         *(item.path for item in epochs),
+        *(path for path in mascon_paths if path is not None),
     ]
     provenance = {
         "input_sha256": {str(path.resolve()): sha256_file(path) for path in input_paths},
@@ -182,14 +301,26 @@ def _compute_run(config: PipelineConfig) -> PipelineRun:
         "mask_hashes": {
             "altimetry_global": altimetry_mask.metadata["sha256"],
             "budget_common": budget_mask.metadata["sha256"],
+            **{name: mask.metadata["sha256"] for name, mask in masks.items() if name.startswith("mascon_")},
         },
+        "mascon_gia_policy": "product GIA correction retained; no second GIA correction",
+        "mascon_processing_order": "SSA separately for CSR/JPL/GSFC, then arithmetic mean",
     }
     return PipelineRun(
         series={
             item.name: item
-            for item in (raw_global, corrected_global, raw_common, corrected_common, mass, obd)
-        },
-        masks={"altimetry_global": altimetry_mask, "budget_common": budget_mask},
+            for item in (
+                raw_global,
+                wet_global,
+                corrected_global,
+                raw_common,
+                wet_common,
+                corrected_common,
+                mass_shc,
+                obd,
+            )
+        } | mascon_series,
+        masks=masks,
         provenance=provenance,
     )
 
@@ -200,7 +331,7 @@ def _monthly_dataset(series: Mapping[str, MonthlySeries]) -> xr.Dataset:
         variables[name] = xr.DataArray(
             item.values,
             dims=("time",),
-            coords={"time": item.time},
+            coords={"time": ("time", item.time.to_numpy())},
             attrs={"units": item.units, **{key: _serializable_attribute(value) for key, value in item.metadata.items()}},
         )
     return xr.Dataset(variables).sortby("time")
@@ -221,7 +352,8 @@ def _write_mask(mask: SpatialMask, path: Path) -> None:
 def _coverage_warnings(series: Mapping[str, MonthlySeries], expected_end_month: str) -> list[str]:
     expected = pd.Period(expected_end_month, freq="M")
     warnings = []
-    for name in ("ocean_mass_csr", "obd"):
+    mass_name = "ocean_mass_ensemble" if "ocean_mass_ensemble" in series else "ocean_mass_csr"
+    for name in (mass_name, "obd"):
         if name not in series:
             continue
         item = series[name]
@@ -270,9 +402,57 @@ def write_run_outputs(
     dataset.to_netcdf(destination / "monthly_budget.nc", engine="scipy")
     dataset.to_dataframe().to_csv(destination / "monthly_budget.csv", index_label="time")
     trends, warnings = _trend_rows(run.series, config.hac_lags, config.end_month)
-    pd.DataFrame([asdict(item) for item in trends]).to_csv(destination / "trend_summary.csv", index=False)
-    _write_mask(run.masks["altimetry_global"], destination / "mask_altimetry_global.nc")
-    _write_mask(run.masks["budget_common"], destination / "mask_budget_common.nc")
+    trend_rows = [{**asdict(item), "result_role": "estimated"} for item in trends]
+    trend_rows.append(
+        {
+            "series_name": "gmsl_final_adopted",
+            "trend_mm_per_year": config.final_gmsl_trend_mm_per_year,
+            "result_role": "adopted_final",
+        }
+    )
+    pd.DataFrame(trend_rows).to_csv(destination / "trend_summary.csv", index=False)
+    trend_by_name = {item.series_name: item for item in trends}
+    corrected_common = trend_by_name.get("gmsl_budget_common_wet_gia_corrected")
+    obd_result = trend_by_name.get("obd")
+    computed_budget_trend = (
+        corrected_common.trend_mm_per_year + obd_result.trend_mm_per_year
+        if corrected_common is not None and obd_result is not None
+        else None
+    )
+    mass_ensemble = trend_by_name.get("ocean_mass_ensemble")
+    mass_300km = trend_by_name.get("ocean_mass_ensemble_300km_sensitivity")
+    final_summary = {
+        "adopted_gmsl_trend_mm_per_year": config.final_gmsl_trend_mm_per_year,
+        "adopted_result_role": "final reported value",
+        "computed_common_domain_gmsl_plus_obd_mm_per_year": computed_budget_trend,
+        "computed_minus_adopted_gmsl_mm_per_year": (
+            computed_budget_trend - config.final_gmsl_trend_mm_per_year
+            if computed_budget_trend is not None
+            else None
+        ),
+        "ocean_mass_ensemble_trend_mm_per_year": (
+            mass_ensemble.trend_mm_per_year if mass_ensemble is not None else None
+        ),
+        "ocean_mass_ensemble_hac_standard_error_mm_per_year": (
+            mass_ensemble.hac_standard_error if mass_ensemble is not None else None
+        ),
+        "ocean_mass_300km_sensitivity_trend_mm_per_year": (
+            mass_300km.trend_mm_per_year if mass_300km is not None else None
+        ),
+        "jin_ocean_mass_reference_mm_per_year": 1.39,
+        "jin_ocean_mass_reference_uncertainty_mm_per_year": 0.32,
+        "mascon_domain": "global ocean at 1 degree; no coastal buffer",
+        "mascon_300km_role": "sensitivity only",
+        "mascon_processing_order": "SSA separately for CSR/JPL/GSFC, then arithmetic mean",
+        "mascon_gia_policy": "product GIA correction retained; no second GIA correction",
+        "estimated_trends_mm_per_year": {
+            name: result.trend_mm_per_year for name, result in trend_by_name.items()
+        },
+        "note": "The adopted GMSL trend is reported explicitly and is not imposed on any monthly series.",
+    }
+    write_json(destination / "final_summary.json", final_summary)
+    for name, mask in run.masks.items():
+        _write_mask(mask, destination / f"mask_{name}.nc")
     write_json(destination / "config_resolved.json", config.resolved_dict())
     provenance = {
         **dict(run.provenance),
@@ -285,6 +465,12 @@ def write_run_outputs(
     }
     write_json(destination / "provenance.json", provenance)
     write_diagnostics(run.series, destination / "diagnostics.png")
+    if "ocean_mass_ensemble" in run.series:
+        write_mass_figure(
+            run.series,
+            destination / "figure1_mass_component.png",
+            config.hac_lags,
+        )
     write_run_report(
         destination / "run_report.md",
         report_run_id or destination.name,

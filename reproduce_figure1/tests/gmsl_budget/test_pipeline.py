@@ -81,6 +81,12 @@ def test_pipeline_without_steric_writes_valid_partial_budget(tmp_path, monkeypat
     assert provenance["budget_closure_available"] is False
     assert (run_dir / "diagnostics.png").is_file()
     assert (run_dir / "run_report.md").is_file()
+    final = json.loads((run_dir / "final_summary.json").read_text(encoding="utf-8"))
+    assert final["adopted_gmsl_trend_mm_per_year"] == 3.057
+    assert final["mascon_gia_policy"] == "product GIA correction retained; no second GIA correction"
+    trend_table = pd.read_csv(run_dir / "trend_summary.csv")
+    adopted = trend_table.loc[trend_table["series_name"] == "gmsl_final_adopted"]
+    assert adopted["trend_mm_per_year"].item() == 3.057
 
 
 def test_pipeline_refuses_to_overwrite_different_config(tmp_path, monkeypatch):

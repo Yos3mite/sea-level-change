@@ -3,6 +3,7 @@ from __future__ import annotations
 from dataclasses import asdict, dataclass
 from hashlib import sha256
 import json
+import math
 from pathlib import Path
 from typing import Any, Mapping
 
@@ -32,6 +33,13 @@ class PipelineConfig:
     obd_preprocessing: Mapping[str, Any]
     steric_path: Path | None = None
     run_id: str | None = None
+    csr_mascon_path: Path | None = None
+    jpl_mascon_path: Path | None = None
+    gsfc_sla_mascon_path: Path | None = None
+    wet_tropo_rate_mm_per_year: float = -0.50
+    wet_tropo_start_month: str = "2016-01"
+    final_gmsl_trend_mm_per_year: float = 3.057
+    mascon_grid_spacing_degrees: float = 1.0
 
     @classmethod
     def load(cls, path: str | Path) -> "PipelineConfig":
@@ -50,7 +58,13 @@ class PipelineConfig:
             if field not in payload:
                 raise ValueError(f"missing required configuration field: {field}")
             payload[field] = Path(payload[field])
-        for field in ("cmems_indicator_path", "steric_path"):
+        for field in (
+            "cmems_indicator_path",
+            "steric_path",
+            "csr_mascon_path",
+            "jpl_mascon_path",
+            "gsfc_sla_mascon_path",
+        ):
             if payload.get(field) is not None:
                 payload[field] = Path(payload[field])
         config = cls(**payload)
@@ -72,10 +86,21 @@ class PipelineConfig:
             raise ValueError("coastal_buffer_km must be non-negative")
         if self.grid_spacing_degrees <= 0:
             raise ValueError("grid_spacing_degrees must be positive")
+        if self.mascon_grid_spacing_degrees <= 0:
+            raise ValueError("mascon_grid_spacing_degrees must be positive")
+        if not math.isfinite(self.altimetry_gia_rate_mm_per_year):
+            raise ValueError("altimetry_gia_rate_mm_per_year must be finite")
+        if not math.isfinite(self.wet_tropo_rate_mm_per_year):
+            raise ValueError("wet_tropo_rate_mm_per_year must be finite")
+        if not math.isfinite(self.final_gmsl_trend_mm_per_year):
+            raise ValueError("final_gmsl_trend_mm_per_year must be finite")
         start = pd.Period(self.start_month, freq="M")
         end = pd.Period(self.end_month, freq="M")
+        wet_tropo_start = pd.Period(self.wet_tropo_start_month, freq="M")
         if start > end:
             raise ValueError("start_month must not be after end_month")
+        if wet_tropo_start > end:
+            raise ValueError("wet_tropo_start_month must not be after end_month")
         if dict(self.mass_preprocessing) != dict(self.obd_preprocessing):
             raise ValueError("mass and OBD must use identical preprocessing")
 

@@ -74,6 +74,13 @@ def ensemble_mean(series_by_center: Mapping[str, MonthlySeries]) -> MonthlySerie
         "ensemble_spread_mm": spread.tolist(),
         "ensemble_method": "unweighted arithmetic mean on common months",
     }
+    if all(series_by_center[center].metadata.get("gia_corrected") is True for center in centers):
+        metadata.update(
+            {
+                "gia_corrected": True,
+                "mascon_gia_policy": "use product correction; do not apply GIA again",
+            }
+        )
     return MonthlySeries(aligned[0].time, values, "ocean_mass_ensemble", "mm", metadata)
 
 
@@ -127,8 +134,7 @@ def _read_hdf5_netcdf(path: Path, variable: str | None) -> xr.Dataset:
 
 def _open_mascon(path: Path, variable: str | None) -> tuple[xr.Dataset, str]:
     try:
-        with xr.open_dataset(path) as source:
-            dataset = source.load()
+        dataset = xr.open_dataset(path, decode_times=False)
     except ValueError as error:
         if "backends" not in str(error):
             raise
@@ -140,8 +146,43 @@ def _open_mascon(path: Path, variable: str | None) -> tuple[xr.Dataset, str]:
     return dataset, variable_name
 
 
+def _decode_mascon_time(dataset: xr.Dataset) -> pd.DatetimeIndex:
+    coordinate = dataset["time"]
+    if np.issubdtype(coordinate.dtype, np.datetime64):
+        return pd.DatetimeIndex(pd.to_datetime(coordinate.values))
+    units = str(coordinate.attrs.get("units", coordinate.attrs.get("Units", "")))
+    match = re.match(r"days since ([0-9]{4}-[0-9]{2}-[0-9]{2})", units)
+    if not match:
+        raise ValueError(f"unsupported mascon time units: {units!r}")
+    return pd.DatetimeIndex(
+        pd.Timestamp(match.group(1)) + pd.to_timedelta(np.asarray(coordinate.values, dtype=np.float64), unit="D")
+    )
+
+
+def _collapse_monthly(time: pd.DatetimeIndex, values: np.ndarray) -> tuple[pd.DatetimeIndex, np.ndarray]:
+    frame = pd.DataFrame({"month": time.to_period("M"), "value": np.asarray(values, dtype=np.float64)})
+    monthly = frame.groupby("month", sort=True, observed=True)["value"].mean()
+    return monthly.index.to_timestamp() + pd.Timedelta(days=14), monthly.to_numpy(dtype=np.float64)
+
+
+def _reject_all_zero(values: np.ndarray, center: str) -> None:
+    finite = np.asarray(values, dtype=np.float64)[np.isfinite(values)]
+    if finite.size and float(np.max(np.abs(finite))) <= 1.0e-12:
+        raise ValueError(f"{center} mascon scientific period is all-zero")
+
+
 def _verify_center(center: str, attrs: Mapping[str, object]) -> None:
-    identity = " ".join(str(value) for value in attrs.values()).lower()
+    identity_fields = (
+        "title",
+        "subtitle",
+        "summary",
+        "institution",
+        "creator_institution",
+        "publisher_institution",
+        "source",
+        "filename",
+    )
+    identity = " ".join(str(attrs.get(key, "")) for key in identity_fields).lower()
     aliases = {
         "CSR": ("csr", "center for space research"),
         "JPL": ("jpl", "jet propulsion laboratory"),
@@ -182,12 +223,17 @@ def read_mascon_ocean_series(
     for old, new in (("lat", "latitude"), ("lon", "longitude")):
         if old in dataset[variable_name].dims and new not in dataset[variable_name].dims:
             rename[old] = new
+    decoded_time = _decode_mascon_time(dataset)
     field = dataset[variable_name].rename(rename).transpose("time", "latitude", "longitude")
-    field = field.assign_coords(longitude=np.mod(field.longitude.values, 360.0)).sortby("latitude").sortby("longitude")
-    if not np.allclose(field.latitude.values, mask.latitude):
-        raise ValueError("mascon latitude does not match fixed mask")
-    if not np.allclose(field.longitude.values, np.mod(mask.longitude, 360.0)):
-        raise ValueError("mascon longitude does not match fixed mask")
+    field = field.assign_coords(
+        time=decoded_time,
+        longitude=np.mod(field.longitude.values, 360.0),
+    ).sortby("latitude").sortby("longitude")
+    field = field.sel(
+        latitude=xr.DataArray(mask.latitude, dims="latitude"),
+        longitude=xr.DataArray(np.mod(mask.longitude, 360.0), dims="longitude"),
+        method="nearest",
+    ).load()
     units = str(field.attrs.get("units", field.attrs.get("Units", "")))
     multiplier = _ewh_units_to_mm(units)
     weights = cell_area_weights(mask.latitude, mask.longitude) * mask.ocean_fraction * mask.support
@@ -201,6 +247,8 @@ def read_mascon_ocean_series(
         if float(np.sum(weights[valid])) / total_weight >= 0.995:
             mean_ewh = float(np.sum(np.where(valid, ewh_mm, 0.0) * weights) / total_weight)
             values[index] = ewh_to_sea_level(mean_ewh, rho_freshwater, rho_seawater)
+    monthly_time, monthly_values = _collapse_monthly(pd.DatetimeIndex(field.time.values), values)
+    _reject_all_zero(monthly_values, center.upper())
     preprocessing_payload = {
         "center": center.upper(),
         "source": str(dataset.attrs.get("source", "")),
@@ -210,9 +258,10 @@ def read_mascon_ocean_series(
     preprocessing_hash = sha256(
         json.dumps(preprocessing_payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
     ).hexdigest()
+    dataset.close()
     return MonthlySeries(
-        field.time.values,
-        values,
+        monthly_time,
+        monthly_values,
         f"ocean_mass_{center.lower()}",
         "mm",
         {
@@ -225,6 +274,88 @@ def read_mascon_ocean_series(
             "mask_hash": mask.metadata.get("sha256"),
             "preprocessing_hash": preprocessing_hash,
             "preprocessing": preprocessing_payload,
+            "gia_corrected": True,
+            "mascon_gia_policy": "use product correction; do not apply GIA again",
             "dynamic_monthly_mask": False,
+            "spatial_interpolation": "nearest neighbour to fixed mask grid",
+            "duplicate_month_policy": "arithmetic mean",
+        },
+    )
+
+
+def _hdf5_vector(group: h5py.File, key: str) -> np.ndarray:
+    return np.asarray(group[key], dtype=np.float64).reshape(-1)
+
+
+def read_gsfc_sla_mascon_series(
+    path: str | Path,
+    mask: SpatialMask,
+    rho_freshwater: float = 1000.0,
+    rho_seawater: float = 1028.0,
+) -> MonthlySeries:
+    source_path = Path(path)
+    with h5py.File(source_path, "r") as source:
+        calendar = np.asarray(source["/time/yyyy_doy_yrplot_middle"], dtype=np.float64)
+        if calendar.shape[0] != 3 and calendar.shape[1] == 3:
+            calendar = calendar.T
+        if calendar.shape[0] != 3:
+            raise ValueError("GSFC HDF5 time table must have year, day-of-year, and decimal year")
+        years = calendar[0].astype(int)
+        days = calendar[1].astype(int)
+        time = pd.DatetimeIndex(
+            [pd.Timestamp(year=int(year), month=1, day=1) + pd.Timedelta(days=int(day) - 1) for year, day in zip(years, days)]
+        )
+        area = _hdf5_vector(source, "/mascon/area_km2")
+        location = _hdf5_vector(source, "/mascon/location")
+        basin = _hdf5_vector(source, "/mascon/basin")
+        latitude = _hdf5_vector(source, "/mascon/lat_center")
+        longitude = np.mod(_hdf5_vector(source, "/mascon/lon_center"), 360.0)
+        cmwe = np.asarray(source["/solution/cmwe"], dtype=np.float64)
+    if cmwe.shape == (len(time), len(area)):
+        cmwe = cmwe.T
+    if cmwe.shape != (len(area), len(time)):
+        raise ValueError("GSFC HDF5 solution dimensions do not match mascon and time tables")
+    lat_index = np.asarray([int(np.argmin(np.abs(mask.latitude - value))) for value in latitude], dtype=int)
+    lon_index = np.asarray(
+        [int(np.argmin(np.abs((np.mod(mask.longitude, 360.0) - value + 180.0) % 360.0 - 180.0))) for value in longitude],
+        dtype=int,
+    )
+    in_fixed_mask = mask.support[lat_index, lon_index] & (mask.ocean_fraction[lat_index, lon_index] > 0.0)
+    selected = (location == 90.0) & (basin == 0.0) & in_fixed_mask & np.isfinite(area) & (area > 0.0)
+    if not np.any(selected):
+        raise ValueError("GSFC HDF5 has no open-ocean mascons inside the fixed mask")
+    mean_cmwe = np.sum(cmwe[selected] * area[selected, None], axis=0) / float(np.sum(area[selected]))
+    values = ewh_to_sea_level(mean_cmwe * 10.0, rho_freshwater, rho_seawater)
+    monthly_time, monthly_values = _collapse_monthly(time, values)
+    _reject_all_zero(monthly_values, "GSFC")
+    preprocessing_payload = {
+        "center": "GSFC",
+        "product": "RL06v2.0 SLA-ICE6GD native equal-area mascons",
+        "gia": "ICE6G-D removed",
+        "gad": "restored with global ocean mean removed",
+    }
+    preprocessing_hash = sha256(
+        json.dumps(preprocessing_payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    ).hexdigest()
+    return MonthlySeries(
+        monthly_time,
+        monthly_values,
+        "ocean_mass_gsfc",
+        "mm",
+        {
+            "center": "GSFC",
+            "source_path": str(source_path.resolve()),
+            "source_variable": "/solution/cmwe",
+            "source_units": "cm equivalent water height",
+            "rho_freshwater_kg_m3": float(rho_freshwater),
+            "rho_seawater_kg_m3": float(rho_seawater),
+            "mask_hash": mask.metadata.get("sha256"),
+            "preprocessing_hash": preprocessing_hash,
+            "preprocessing": preprocessing_payload,
+            "gia_corrected": True,
+            "mascon_gia_policy": "use product correction; do not apply GIA again",
+            "native_ocean_mascon_count": int(np.sum(selected)),
+            "spatial_interpolation": "fixed mask sampled at native mascon centres",
+            "duplicate_month_policy": "arithmetic mean",
         },
     )

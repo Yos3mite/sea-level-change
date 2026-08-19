@@ -9,7 +9,7 @@
   "start_month": "2013-11",
   "end_month": "2024-10",
   "gia_mode": "scalar",
-  "altimetry_gia_rate_mm_per_year": 0.30,
+  "altimetry_gia_rate_mm_per_year": -0.30,
   "rho_freshwater_kg_m3": 1000.0,
   "rho_seawater_kg_m3": 1028.0,
   "min_valid_weight_fraction": 0.995,
@@ -31,5 +31,12 @@
     "c20_c30": "TN14"
   },
   "steric_path": null,
+  "csr_mascon_path": "D:/temp_sealevel_data/CSR_GRACE_GRACE-FO_RL0603_Mascons_all-corrections.nc",
+  "jpl_mascon_path": "D:/temp_sealevel_data/jpl_mascon_rl06.3_v04.nc",
+  "gsfc_sla_mascon_path": "D:/temp_sealevel_data/gsfc.glb.200204_202603_RL06v2.0_SLA-ICE6GD.h5",
+  "wet_tropo_rate_mm_per_year": -0.50,
+  "wet_tropo_start_month": "2016-01",
+  "final_gmsl_trend_mm_per_year": 3.057,
+  "mascon_grid_spacing_degrees": 1.0,
   "run_id": null
 }

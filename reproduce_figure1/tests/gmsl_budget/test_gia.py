@@ -3,7 +3,7 @@ import pandas as pd
 import pytest
 import xarray as xr
 
-from gmsl_budget.gia import apply_scalar_gia, area_average_spatial_gia
+from gmsl_budget.gia import apply_piecewise_trend_correction, apply_scalar_gia, area_average_spatial_gia
 from gmsl_budget.models import MonthlySeries, SpatialMask
 
 
@@ -17,12 +17,31 @@ def _series(metadata=None):
     )
 
 
-def test_positive_gia_rate_adds_three_mm_over_ten_years():
+def test_jin_gia_rate_subtracts_three_mm_over_ten_years():
     raw = _series()
-    corrected = apply_scalar_gia(raw, 0.30, reference_time=raw.time[0])
-    assert corrected.values[1] - corrected.values[0] == pytest.approx(3.0, rel=2e-4)
+    corrected = apply_scalar_gia(raw, -0.30, reference_time=raw.time[0])
+    assert corrected.values[1] - corrected.values[0] == pytest.approx(-3.0, rel=2e-4)
     assert corrected.metadata["gia_corrected"] is True
-    assert corrected.metadata["gia_sign_convention"] == "positive rate increases corrected GMSL trend"
+    assert corrected.metadata["gia_sign_convention"] == "signed rate is added to the parent series"
+
+
+def test_wet_troposphere_drift_is_piecewise_from_2016():
+    raw = MonthlySeries(
+        pd.to_datetime(["2015-01-15", "2016-01-15", "2018-01-15"]),
+        np.zeros(3),
+        "gmsl_raw",
+        "mm",
+        {},
+    )
+    corrected = apply_piecewise_trend_correction(
+        raw,
+        rate_mm_per_year=-0.50,
+        start_time=pd.Timestamp("2016-01-15"),
+        correction_name="jason3_wet_troposphere_drift",
+    )
+    assert corrected.values == pytest.approx([0.0, 0.0, -1.0], abs=2e-3)
+    assert corrected.metadata["trend_correction_rate_mm_per_year"] == -0.50
+    assert corrected.metadata["trend_correction_start_time"] == "2016-01-15T00:00:00"
 
 
 def test_gia_cannot_be_applied_twice():

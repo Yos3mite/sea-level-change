@@ -32,6 +32,13 @@ def _config_payload(**overrides):
         "obd_preprocessing": {"release": "RL06.3", "filter": "DDK1", "gia": "Caron2018"},
         "steric_path": None,
         "run_id": None,
+        "csr_mascon_path": "D:/temp_sealevel_data/csr.nc",
+        "jpl_mascon_path": "D:/temp_sealevel_data/jpl.nc",
+        "gsfc_sla_mascon_path": "D:/temp_sealevel_data/gsfc.h5",
+        "wet_tropo_rate_mm_per_year": -0.50,
+        "wet_tropo_start_month": "2016-01",
+        "final_gmsl_trend_mm_per_year": 3.057,
+        "mascon_grid_spacing_degrees": 1.0,
     }
     payload.update(overrides)
     return payload
@@ -67,6 +74,16 @@ def test_config_hash_is_independent_of_json_key_order(tmp_path):
     assert left.sha256() == right.sha256()
 
 
+def test_config_resolves_three_mascon_centers_and_jin_corrections(tmp_path):
+    config = PipelineConfig.load(_write_config(tmp_path, _config_payload(altimetry_gia_rate_mm_per_year=-0.30)))
+    assert config.csr_mascon_path == Path("D:/temp_sealevel_data/csr.nc")
+    assert config.jpl_mascon_path == Path("D:/temp_sealevel_data/jpl.nc")
+    assert config.gsfc_sla_mascon_path == Path("D:/temp_sealevel_data/gsfc.h5")
+    assert config.altimetry_gia_rate_mm_per_year == -0.30
+    assert config.wet_tropo_rate_mm_per_year == -0.50
+    assert config.final_gmsl_trend_mm_per_year == 3.057
+
+
 def test_monthly_series_rejects_duplicate_months():
     time = pd.to_datetime(["2020-01-15", "2020-01-20"])
     with pytest.raises(ValueError, match="duplicate month"):
@@ -83,6 +100,12 @@ def test_monthly_series_normalizes_times_to_month_midpoint():
     )
     assert result.time.tolist() == pd.to_datetime(["2020-01-15", "2020-02-15"]).tolist()
     assert result.values.dtype == np.float64
+
+
+def test_monthly_series_clears_pandas_index_name_for_xarray_dimension_safety():
+    named = pd.DatetimeIndex(pd.to_datetime(["2020-01-15"]), name="month")
+    result = MonthlySeries(named, np.array([1.0]), "x", "mm", {})
+    assert result.time.name is None
 
 
 def test_spatial_mask_rejects_fraction_outside_zero_one():

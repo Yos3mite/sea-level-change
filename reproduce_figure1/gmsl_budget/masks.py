@@ -76,6 +76,39 @@ def _nearest_longitude_indices(source: np.ndarray, query: np.ndarray) -> np.ndar
     return np.asarray(indices, dtype=int)
 
 
+def resample_mask_nearest(
+    mask: SpatialMask,
+    target_latitude: np.ndarray,
+    target_longitude: np.ndarray,
+    name: str,
+) -> SpatialMask:
+    """Sample a fixed spatial mask onto another regular grid.
+
+    Nearest-neighbour sampling is intentional here: mask support is categorical
+    and must not be blurred across coastlines.  Fractional-ocean weights retain
+    the value of the selected source cell.
+    """
+    target_latitude = np.asarray(target_latitude, dtype=np.float64)
+    target_longitude = np.asarray(target_longitude, dtype=np.float64)
+    lat_index = _nearest_latitude_indices(mask.latitude, target_latitude)
+    lon_index = _nearest_longitude_indices(mask.longitude, target_longitude)
+    metadata = dict(mask.metadata)
+    metadata.update(
+        {
+            "name": str(name),
+            "parent_mask_sha256": mask.metadata.get("sha256"),
+            "resampling": "nearest-neighbour categorical support",
+        }
+    )
+    return SpatialMask(
+        latitude=target_latitude,
+        longitude=target_longitude,
+        ocean_fraction=mask.ocean_fraction[np.ix_(lat_index, lon_index)],
+        support=mask.support[np.ix_(lat_index, lon_index)],
+        metadata=metadata,
+    )
+
+
 def load_cdt_ocean_fraction(
     land_mask_mat: str | Path,
     target_latitude: np.ndarray,

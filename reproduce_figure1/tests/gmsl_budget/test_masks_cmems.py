@@ -11,6 +11,7 @@ from gmsl_budget.masks import (
     cell_area_weights,
     load_cdt_coast_distance,
     load_cdt_ocean_fraction,
+    resample_mask_nearest,
 )
 from gmsl_budget.models import SpatialMask
 
@@ -85,6 +86,21 @@ def test_buffer_keeps_only_ocean_cells_at_least_300_km_from_coast():
     buffered = buffer_ocean_mask(mask, distance, distance_km=300.0)
     assert buffered.support.tolist() == [[False, True, True]]
     assert buffered.metadata["coastal_buffer_km"] == 300.0
+
+
+def test_resample_mask_nearest_preserves_conceptual_mask_identity():
+    source = SpatialMask(
+        np.array([-0.25, 0.25]),
+        np.array([0.25, 0.75]),
+        np.array([[0.2, 0.4], [0.6, 0.8]]),
+        np.array([[False, True], [True, True]]),
+        {"sha256": "source-hash", "name": "budget_common"},
+    )
+    result = resample_mask_nearest(source, np.array([0.20]), np.array([0.70]), "mascon_common_1deg")
+    assert result.ocean_fraction.tolist() == [[0.8]]
+    assert result.support.tolist() == [[True]]
+    assert result.metadata["parent_mask_sha256"] == "source-hash"
+    assert result.metadata["name"] == "mascon_common_1deg"
 
 
 def test_cdt_subcell_aggregation_returns_fractional_coastal_cell(tmp_path):
