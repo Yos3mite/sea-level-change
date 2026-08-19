@@ -2,7 +2,7 @@ from datetime import date
 from hashlib import sha256
 from io import BytesIO
 from pathlib import Path
-from urllib.error import HTTPError
+from urllib.error import HTTPError, URLError
 
 import pytest
 
@@ -142,3 +142,27 @@ def test_read_url_retries_http_429_using_retry_after():
 
     assert _read_url("https://example.test/file", opener=opener, sleeper=sleeps.append) == b"valid"
     assert sleeps == [0.0]
+
+
+def test_read_url_retries_transient_connection_error():
+    class Response:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *args):
+            return False
+
+        def read(self):
+            return b"valid"
+
+    responses = [URLError("TLS connection closed"), Response()]
+    sleeps = []
+
+    def opener(*args, **kwargs):
+        response = responses.pop(0)
+        if isinstance(response, Exception):
+            raise response
+        return response
+
+    assert _read_url("https://example.test/file", opener=opener, sleeper=sleeps.append) == b"valid"
+    assert sleeps == [5.0]

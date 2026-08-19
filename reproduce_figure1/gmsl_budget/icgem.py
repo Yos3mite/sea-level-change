@@ -7,7 +7,7 @@ from html.parser import HTMLParser
 from pathlib import Path
 import re
 import time
-from urllib.error import HTTPError
+from urllib.error import HTTPError, URLError
 from urllib.parse import quote, urljoin, urlparse, urlsplit, urlunsplit
 from urllib.request import Request, urlopen
 
@@ -149,6 +149,10 @@ def _read_url(url: str, opener=None, sleeper=None, max_attempts: int = 5) -> byt
             retry_after = error.headers.get("Retry-After") if error.headers is not None else None
             delay = float(retry_after) if retry_after is not None else min(60.0, 5.0 * 2**attempt)
             sleep(max(0.0, delay))
+        except URLError:
+            if attempt + 1 == max_attempts:
+                raise
+            sleep(min(60.0, 5.0 * 2**attempt))
     raise RuntimeError("unreachable URL retry state")
 
 
