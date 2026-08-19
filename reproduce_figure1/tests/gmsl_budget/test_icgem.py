@@ -1,10 +1,12 @@
 from datetime import date
 from hashlib import sha256
+from io import BytesIO
 from pathlib import Path
+from urllib.error import HTTPError
 
 import pytest
 
-from gmsl_budget.icgem import DownloadSpec, discover_gfc_downloads, download_gfc, parse_gfc
+from gmsl_budget.icgem import DownloadSpec, _read_url, discover_gfc_downloads, download_gfc, parse_gfc
 
 
 GFC_TEXT = """begin_of_head
@@ -101,3 +103,42 @@ def test_download_rejects_hash_mismatch(tmp_path):
     spec = DownloadSpec(source.as_uri(), "target.gfc", "test-page", expected_sha256="0" * 64)
     with pytest.raises(ValueError, match="SHA-256"):
         download_gfc(spec, tmp_path / "downloads")
+
+
+def test_download_reuses_valid_existing_gfc_without_network(tmp_path):
+    destination = tmp_path / "downloads"
+    destination.mkdir()
+    existing = destination / "target.gfc"
+    existing.write_text(GFC_TEXT, encoding="ascii")
+    expected = sha256(existing.read_bytes()).hexdigest()
+    spec = DownloadSpec("http://must-not-be-opened.invalid/target.gfc", "target.gfc", "test", expected)
+    result = download_gfc(spec, destination)
+    assert result.path == existing.resolve()
+    assert result.sha256 == expected
+
+
+def test_read_url_retries_http_429_using_retry_after():
+    class Response:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *args):
+            return False
+
+        def read(self):
+            return b"valid"
+
+    responses = [
+        HTTPError("https://example.test/file", 429, "rate limited", {"Retry-After": "0"}, BytesIO()),
+        Response(),
+    ]
+    sleeps = []
+
+    def opener(*args, **kwargs):
+        response = responses.pop(0)
+        if isinstance(response, Exception):
+            raise response
+        return response
+
+    assert _read_url("https://example.test/file", opener=opener, sleeper=sleeps.append) == b"valid"
+    assert sleeps == [0.0]

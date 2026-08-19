@@ -6,6 +6,8 @@ from hashlib import sha256
 from html.parser import HTMLParser
 from pathlib import Path
 import re
+import time
+from urllib.error import HTTPError
 from urllib.parse import quote, urljoin, urlparse, urlsplit, urlunsplit
 from urllib.request import Request, urlopen
 
@@ -128,13 +130,26 @@ def parse_gfc(path: str | Path, lmax: int | None = None) -> GfcEpoch:
     )
 
 
-def _read_url(url: str) -> bytes:
+def _read_url(url: str, opener=None, sleeper=None, max_attempts: int = 5) -> bytes:
     scheme = urlparse(url).scheme.lower()
     if scheme not in {"https", "file"}:
         raise ValueError(f"only HTTPS downloads are allowed: {url}")
+    if max_attempts < 1:
+        raise ValueError("max_attempts must be positive")
+    open_url = urlopen if opener is None else opener
+    sleep = time.sleep if sleeper is None else sleeper
     request = Request(url, headers={"User-Agent": "gmsl-budget/0.1"}) if scheme == "https" else url
-    with urlopen(request, timeout=60) as response:
-        return response.read()
+    for attempt in range(max_attempts):
+        try:
+            with open_url(request, timeout=60) as response:
+                return response.read()
+        except HTTPError as error:
+            if error.code != 429 or attempt + 1 == max_attempts:
+                raise
+            retry_after = error.headers.get("Retry-After") if error.headers is not None else None
+            delay = float(retry_after) if retry_after is not None else min(60.0, 5.0 * 2**attempt)
+            sleep(max(0.0, delay))
+    raise RuntimeError("unreachable URL retry state")
 
 
 def discover_gfc_downloads(
@@ -187,6 +202,13 @@ def download_gfc(spec: DownloadSpec, destination: str | Path) -> DownloadResult:
     destination_path.mkdir(parents=True, exist_ok=True)
     final_path = destination_path / spec.filename
     part_path = destination_path / f"{spec.filename}.part"
+    if final_path.is_file():
+        existing = final_path.read_bytes()
+        _validate_gfc_bytes(existing)
+        existing_digest = sha256(existing).hexdigest()
+        if spec.expected_sha256 is not None and existing_digest.lower() != spec.expected_sha256.lower():
+            raise ValueError(f"existing GFC SHA-256 mismatch for {spec.filename}")
+        return DownloadResult(final_path.resolve(), existing_digest, len(existing), spec.url, spec.source_page)
     content = _read_url(spec.url)
     _validate_gfc_bytes(content)
     digest = sha256(content).hexdigest()
