@@ -8,7 +8,7 @@ import xarray as xr
 
 from gmsl_budget.config import PipelineConfig
 from gmsl_budget.models import MonthlySeries, SpatialMask
-from gmsl_budget.pipeline import PipelineRun, run_pipeline
+from gmsl_budget.pipeline import PipelineRun, _coverage_warnings, _default_run_id, run_pipeline
 from gmsl_budget.provenance import sha256_file
 
 
@@ -103,3 +103,30 @@ def test_default_run_identity_changes_when_input_inventory_changes(tmp_path, mon
     second = run_pipeline(config)
     assert first != second
     assert first.is_dir() and second.is_dir()
+
+
+def test_pipeline_writes_netcdf_under_unicode_run_path(tmp_path, monkeypatch):
+    config = _config(tmp_path, run_id="海平面结果")
+    monkeypatch.setattr("gmsl_budget.pipeline._compute_run", _fixture_run)
+    run_dir = run_pipeline(config)
+    with xr.open_dataset(run_dir / "monthly_budget.nc", engine="scipy") as dataset:
+        assert "obd" in dataset
+
+
+def test_default_run_identity_includes_processing_source_hash():
+    first = _default_run_id("a" * 64, "b" * 64, "c" * 64)
+    second = _default_run_id("a" * 64, "b" * 64, "d" * 64)
+    assert first != second
+
+
+def test_coverage_warning_reports_mass_and_obd_ending_before_requested_month():
+    time = pd.date_range("2020-01-15", periods=12, freq="MS") + pd.Timedelta(days=14)
+    series = {
+        "ocean_mass_csr": MonthlySeries(time, np.zeros(12), "ocean_mass_csr", "mm", {}),
+        "obd": MonthlySeries(time, np.zeros(12), "obd", "mm", {}),
+    }
+    warnings = _coverage_warnings(series, "2021-12")
+    assert warnings == [
+        "ocean_mass_csr ends at 2021-01 before requested end month 2021-12.",
+        "obd ends at 2021-01 before requested end month 2021-12.",
+    ]

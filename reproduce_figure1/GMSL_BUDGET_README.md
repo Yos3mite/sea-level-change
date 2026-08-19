@@ -74,6 +74,7 @@ D:\python\python.exe -m compileall -q gmsl_budget run_gmsl_budget.py scripts
 - `diagnostics.png`、`run_report.md`：诊断图与科学检查报告。
 
 没有合格比容输入时，NetCDF 中不会出现 `steric` 或 `closure`，也不会用零值占位。
+输出固定为 NetCDF3/SciPy 后端，以兼容 Windows 中文目录。若环境同时安装了 `netCDF4`，使用 Xarray 打开这些文件时应显式写 `xr.open_dataset(path, engine="scipy")`，避免 `netCDF4` C 库在中文路径上失败。
 
 ## 私有 GitHub 仓库
 

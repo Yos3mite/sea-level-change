@@ -56,6 +56,18 @@ def _input_inventory(config: PipelineConfig) -> tuple[dict[str, str], str]:
     return inventory, sha256(serialized).hexdigest()
 
 
+def _source_inventory() -> tuple[dict[str, str], str]:
+    package_root = Path(__file__).resolve().parent
+    paths = [*sorted(package_root.glob("*.py")), package_root.parent / "run_gmsl_budget.py"]
+    inventory = {str(path.resolve()): sha256_file(path) for path in paths}
+    serialized = json.dumps(inventory, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    return inventory, sha256(serialized).hexdigest()
+
+
+def _default_run_id(config_hash: str, inventory_hash: str, source_hash: str) -> str:
+    return f"gmsl-{config_hash[:8]}-{inventory_hash[:8]}-{source_hash[:8]}"
+
+
 def _serializable_attribute(value: Any) -> str | int | float:
     if isinstance(value, (str, int, float, np.integer, np.floating)) and not isinstance(value, bool):
         return value
@@ -203,12 +215,31 @@ def _write_mask(mask: SpatialMask, path: Path) -> None:
         coords={"latitude": mask.latitude, "longitude": mask.longitude},
         attrs={key: _serializable_attribute(value) for key, value in mask.metadata.items()},
     )
-    dataset.to_netcdf(path)
+    dataset.to_netcdf(path, engine="scipy")
 
 
-def _trend_rows(series: Mapping[str, MonthlySeries], hac_lags: int) -> tuple[list[TrendResult], list[str]]:
+def _coverage_warnings(series: Mapping[str, MonthlySeries], expected_end_month: str) -> list[str]:
+    expected = pd.Period(expected_end_month, freq="M")
+    warnings = []
+    for name in ("ocean_mass_csr", "obd"):
+        if name not in series:
+            continue
+        item = series[name]
+        valid = np.isfinite(item.values)
+        if not np.any(valid):
+            warnings.append(f"{name} has no finite months through requested end month {expected}.")
+            continue
+        last = item.time[valid].to_period("M").max()
+        if last < expected:
+            warnings.append(f"{name} ends at {last} before requested end month {expected}.")
+    return warnings
+
+
+def _trend_rows(
+    series: Mapping[str, MonthlySeries], hac_lags: int, expected_end_month: str
+) -> tuple[list[TrendResult], list[str]]:
     results: list[TrendResult] = []
-    warnings: list[str] = []
+    warnings = _coverage_warnings(series, expected_end_month)
     for item in series.values():
         try:
             results.append(fit_trend(item, hac_lags))
@@ -231,9 +262,9 @@ def write_run_outputs(run: PipelineRun, output_dir: str | Path, config: Pipeline
             "budget_closure_available": 0,
         }
     )
-    dataset.to_netcdf(destination / "monthly_budget.nc")
+    dataset.to_netcdf(destination / "monthly_budget.nc", engine="scipy")
     dataset.to_dataframe().to_csv(destination / "monthly_budget.csv", index_label="time")
-    trends, warnings = _trend_rows(run.series, config.hac_lags)
+    trends, warnings = _trend_rows(run.series, config.hac_lags, config.end_month)
     pd.DataFrame([asdict(item) for item in trends]).to_csv(destination / "trend_summary.csv", index=False)
     _write_mask(run.masks["altimetry_global"], destination / "mask_altimetry_global.nc")
     _write_mask(run.masks["budget_common"], destination / "mask_budget_common.nc")
@@ -262,7 +293,8 @@ def write_run_outputs(run: PipelineRun, output_dir: str | Path, config: Pipeline
 def run_pipeline(config: PipelineConfig) -> Path:
     config_hash = config.sha256()
     inventory, inventory_hash = _input_inventory(config)
-    run_id = config.run_id or f"gmsl-{config_hash[:8]}-{inventory_hash[:8]}"
+    source_inventory, source_hash = _source_inventory()
+    run_id = config.run_id or _default_run_id(config_hash, inventory_hash, source_hash)
     output_root = config.output_root
     output_root.mkdir(parents=True, exist_ok=True)
     destination = output_root / run_id
@@ -273,8 +305,14 @@ def run_pipeline(config: PipelineConfig) -> Path:
             if (
                 previous.get("configuration_sha256") == config_hash
                 and previous.get("input_inventory_sha256") == inventory_hash
+                and previous.get("processing_source_sha256") == source_hash
             ):
                 return destination
+            if (
+                previous.get("configuration_sha256") == config_hash
+                and previous.get("input_inventory_sha256") == inventory_hash
+            ):
+                raise FileExistsError(f"run directory exists with a different processing source hash: {destination}")
             if previous.get("configuration_sha256") == config_hash:
                 raise FileExistsError(f"run directory exists with a different input inventory hash: {destination}")
         raise FileExistsError(f"run directory exists with a different configuration hash: {destination}")
@@ -286,6 +324,8 @@ def run_pipeline(config: PipelineConfig) -> Path:
             **dict(computed.provenance),
             "input_inventory": inventory,
             "input_inventory_sha256": inventory_hash,
+            "processing_source_inventory": source_inventory,
+            "processing_source_sha256": source_hash,
         },
     )
     staging = output_root / f".{run_id}.tmp-{uuid4().hex}"
