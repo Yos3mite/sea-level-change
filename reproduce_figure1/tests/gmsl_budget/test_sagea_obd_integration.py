@@ -5,9 +5,11 @@ import numpy as np
 
 from gmsl_budget.obd import (
     ProcessedCoefficients,
+    area_average_mass_and_obd,
     convert_coefficients_to_vertical_displacement,
     load_wang_love_numbers,
 )
+from gmsl_budget.models import SpatialMask
 
 
 SAGEA_ROOT = Path("D:/AAAA海平面变化/SaGEA-main(L2-L3)/SaGEA-main")
@@ -49,3 +51,19 @@ def test_zero_coefficients_synthesize_exactly_zero_float64_grid():
     assert grid.shape == (1, 2, 2)
     assert np.array_equal(grid.values, np.zeros((1, 2, 2)))
     assert grid.attrs["preprocessing_hash"] == "synthetic"
+
+
+def test_streamed_mass_and_obd_average_returns_zero_without_storing_cubes():
+    c = np.zeros((3, 3), dtype=np.float64)
+    s = np.zeros_like(c)
+    mask = SpatialMask(
+        latitude=np.array([-45.0, 45.0]),
+        longitude=np.array([0.0, 180.0]),
+        ocean_fraction=np.ones((2, 2)),
+        support=np.ones((2, 2), dtype=bool),
+        metadata={"sha256": "mask"},
+    )
+    mass, obd = area_average_mass_and_obd(_processed(c, s), SAGEA_ROOT, mask)
+    assert mass.values.tolist() == [0.0]
+    assert obd.values.tolist() == [0.0]
+    assert mass.metadata["preprocessing_hash"] == obd.metadata["preprocessing_hash"] == "synthetic"

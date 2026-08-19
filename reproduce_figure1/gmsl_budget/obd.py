@@ -266,6 +266,83 @@ def assert_shared_preprocessing(mass_hash: str, obd_hash: str) -> None:
         raise ValueError("mass and OBD preprocessing hash must match")
 
 
+def area_average_mass_and_obd(
+    processed: ProcessedCoefficients,
+    sagea_root: str | Path,
+    mask: SpatialMask,
+    rho_freshwater: float = FRESHWATER_DENSITY_KG_M3,
+    rho_seawater: float = 1_028.0,
+) -> tuple[MonthlySeries, MonthlySeries]:
+    """Synthesize and average one epoch at a time, avoiding global 3-D cubes."""
+    if rho_freshwater <= 0 or rho_seawater <= 0:
+        raise ValueError("densities must be positive")
+    spatial_weights = cell_area_weights(mask.latitude, mask.longitude) * mask.ocean_fraction * mask.support
+    total_weight = float(np.sum(spatial_weights))
+    if total_weight <= 0:
+        raise ValueError("fixed mask has no positive ocean weight")
+
+    k, h = load_wang_love_numbers(sagea_root, processed.lmax)
+    mass_weights = ewh_conversion_weights(
+        processed.lmax,
+        k,
+        water_density=rho_freshwater,
+    )
+    obd_weights = vertical_conversion_weights(processed.lmax, k, h)
+    mass_values = np.full(len(processed.midpoint), np.nan, dtype=np.float64)
+    obd_values = np.full(len(processed.midpoint), np.nan, dtype=np.float64)
+
+    with _sagea_context(Path(sagea_root)):
+        from pysrc.post_processing.harmonic.Harmonic import Harmonic
+
+        harmonic = Harmonic(mask.latitude, mask.longitude, processed.lmax, option=1)
+        for index in range(len(processed.midpoint)):
+            c = processed.c[index]
+            s = processed.s[index]
+            ewh = np.asarray(
+                harmonic.synthesis(c * mass_weights[:, None], s * mass_weights[:, None]),
+                dtype=np.float64,
+            )
+            displacement = np.asarray(
+                harmonic.synthesis(c * obd_weights[:, None], s * obd_weights[:, None]),
+                dtype=np.float64,
+            )
+            valid = np.isfinite(ewh) & np.isfinite(displacement) & mask.support
+            if float(np.sum(spatial_weights[valid])) / total_weight >= 0.995:
+                mass_mean_m = float(np.sum(np.where(valid, ewh, 0.0) * spatial_weights) / total_weight)
+                obd_mean_m = float(np.sum(np.where(valid, displacement, 0.0) * spatial_weights) / total_weight)
+                mass_values[index] = mass_mean_m * 1000.0 * rho_freshwater / rho_seawater
+                obd_values[index] = obd_mean_m * 1000.0
+
+    shared_metadata = {
+        "preprocessing_hash": processed.preprocessing_hash,
+        "mask_hash": mask.metadata.get("sha256"),
+        "streaming": "one epoch synthesized and averaged at a time",
+    }
+    mass = MonthlySeries(
+        processed.midpoint,
+        mass_values,
+        "ocean_mass_csr",
+        "mm",
+        {
+            **shared_metadata,
+            "source_quantity": "GRACE/GRACE-FO equivalent water height",
+            "density_conversion": f"rho_freshwater/rho_seawater = {rho_freshwater}/{rho_seawater}",
+        },
+    )
+    obd = MonthlySeries(
+        processed.midpoint,
+        obd_values,
+        "obd",
+        "mm",
+        {
+            **shared_metadata,
+            "sign_convention": "upward positive; subsidence negative",
+            "source_quantity": "GRACE/GRACE-FO elastic vertical displacement",
+        },
+    )
+    return mass, obd
+
+
 def area_average_obd(
     displacement: xr.DataArray,
     mask: SpatialMask,
