@@ -49,7 +49,7 @@ y(t) = b0 + b1(t-t_mean) + a1 sin(2πt) + c1 cos(2πt)
 在仓库的 `reproduce_figure1` 目录执行：
 
 ```powershell
-D:\python\python.exe -m pip install "h5netcdf>=1.3"
+D:\python\python.exe -m pip install "h5netcdf>=1.3" "netCDF4>=1.6"
 D:\python\python.exe scripts\download_icgem_csr.py --destination D:\temp_sealevel_data\grace_csr_ddk1 --start 2013-11 --end 2024-10
 D:\python\python.exe run_gmsl_budget.py --config configs\gmsl_budget_main.json
 ```

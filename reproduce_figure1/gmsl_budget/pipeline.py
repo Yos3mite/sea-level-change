@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
+from hashlib import sha256
 import json
 from pathlib import Path
 import shutil
@@ -29,6 +30,30 @@ class PipelineRun:
     series: Mapping[str, MonthlySeries]
     masks: Mapping[str, SpatialMask]
     provenance: Mapping[str, Any]
+
+
+def _input_inventory(config: PipelineConfig) -> tuple[dict[str, str], str]:
+    low_degree = config.sagea_root / "data" / "L2_low_degrees"
+    candidates = [
+        config.cmems_sla_path,
+        config.cdt_land_mask_path,
+        config.cdt_distance_path,
+        low_degree / "TN-11_C20_SLR_RL06.txt",
+        low_degree / "TN-13_GEOC_CSR_RL06.2.txt",
+        low_degree / "TN-14_C30_C20_SLR_GSFC.txt",
+        config.sagea_root / "data" / "GIA" / "GIA.Caron_et_al_2018.txt",
+        config.sagea_root / "data" / "auxiliary" / "LoveNumber.mat",
+        *sorted(config.grace_gfc_dir.glob("*.gfc")),
+    ]
+    for optional in (config.cmems_indicator_path, config.steric_path):
+        if optional is not None:
+            candidates.append(optional)
+    inventory = {
+        str(path.resolve()): sha256_file(path) if path.is_file() else "missing"
+        for path in candidates
+    }
+    serialized = json.dumps(inventory, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    return inventory, sha256(serialized).hexdigest()
 
 
 def _serializable_attribute(value: Any) -> str | int | float:
@@ -236,7 +261,8 @@ def write_run_outputs(run: PipelineRun, output_dir: str | Path, config: Pipeline
 
 def run_pipeline(config: PipelineConfig) -> Path:
     config_hash = config.sha256()
-    run_id = config.run_id or f"gmsl-{config_hash[:12]}"
+    inventory, inventory_hash = _input_inventory(config)
+    run_id = config.run_id or f"gmsl-{config_hash[:8]}-{inventory_hash[:8]}"
     output_root = config.output_root
     output_root.mkdir(parents=True, exist_ok=True)
     destination = output_root / run_id
@@ -244,10 +270,24 @@ def run_pipeline(config: PipelineConfig) -> Path:
         provenance_path = destination / "provenance.json"
         if provenance_path.is_file():
             previous = json.loads(provenance_path.read_text(encoding="utf-8"))
-            if previous.get("configuration_sha256") == config_hash:
+            if (
+                previous.get("configuration_sha256") == config_hash
+                and previous.get("input_inventory_sha256") == inventory_hash
+            ):
                 return destination
+            if previous.get("configuration_sha256") == config_hash:
+                raise FileExistsError(f"run directory exists with a different input inventory hash: {destination}")
         raise FileExistsError(f"run directory exists with a different configuration hash: {destination}")
-    run = _compute_run(config)
+    computed = _compute_run(config)
+    run = PipelineRun(
+        computed.series,
+        computed.masks,
+        {
+            **dict(computed.provenance),
+            "input_inventory": inventory,
+            "input_inventory_sha256": inventory_hash,
+        },
+    )
     staging = output_root / f".{run_id}.tmp-{uuid4().hex}"
     try:
         write_run_outputs(run, staging, config)

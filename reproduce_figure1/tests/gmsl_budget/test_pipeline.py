@@ -90,3 +90,16 @@ def test_pipeline_refuses_to_overwrite_different_config(tmp_path, monkeypatch):
     run_pipeline(first)
     with pytest.raises(FileExistsError, match="different configuration hash"):
         run_pipeline(second)
+
+
+def test_default_run_identity_changes_when_input_inventory_changes(tmp_path, monkeypatch):
+    config = _config(tmp_path, run_id=None)
+    config.grace_gfc_dir.mkdir()
+    gfc = config.grace_gfc_dir / "month.gfc"
+    gfc.write_bytes(b"first")
+    monkeypatch.setattr("gmsl_budget.pipeline._compute_run", _fixture_run)
+    first = run_pipeline(config)
+    gfc.write_bytes(b"second")
+    second = run_pipeline(config)
+    assert first != second
+    assert first.is_dir() and second.is_dir()

@@ -12,8 +12,8 @@ from gmsl_budget.icgem import discover_gfc_downloads, download_gfc
 
 
 SERIES_PAGES = (
-    "https://icgem.gfz-potsdam.de/sp/01_GRACE/CSR/CSR%20Release%2006",
-    "https://icgem.gfz-potsdam.de/sp/01_GRACE/CSR/CSR%20Release%2006.3%20%28GFO%29",
+    "https://icgem.gfz.de/sp/01_GRACE/CSR/CSR%20Release%2006",
+    "https://icgem.gfz.de/sp/01_GRACE/CSR/CSR%20Release%2006.3%20%28GFO%29",
 )
 SOURCE_METADATA = {
     "solution_code": "BA01 (unconstrained degree/order 60; BB01 degree/order 96 excluded)",
