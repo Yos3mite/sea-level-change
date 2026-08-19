@@ -62,6 +62,18 @@ def test_discovery_filters_ddk1_and_epoch_midpoint(tmp_path):
     ]
 
 
+def test_discovery_percent_encodes_spaces_in_download_url(tmp_path):
+    filename = "kfilter_DDK1_GSM-2_2018275-2018305_GRFO_UTCSR_BA01_0603.gfc"
+    html = tmp_path / "listing.html"
+    html.write_text(
+        f'<a href="/getseries/CSR Release 06/60x60/DDK1/{filename}">file</a>',
+        encoding="utf-8",
+    )
+    [spec] = discover_gfc_downloads([html.as_uri()], "2018-10", "2018-10")
+    assert " " not in spec.url
+    assert "CSR%20Release%2006" in spec.url
+
+
 def test_download_rejects_html_saved_as_gfc(tmp_path):
     source = tmp_path / "error.gfc"
     source.write_text("<html>server error</html>", encoding="utf-8")

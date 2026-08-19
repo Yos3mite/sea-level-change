@@ -6,7 +6,7 @@ from hashlib import sha256
 from html.parser import HTMLParser
 from pathlib import Path
 import re
-from urllib.parse import urljoin, urlparse
+from urllib.parse import quote, urljoin, urlparse, urlsplit, urlunsplit
 from urllib.request import Request, urlopen
 
 import numpy as np
@@ -166,7 +166,11 @@ def discover_gfc_downloads(
             if start_period <= midpoint_period <= end_period:
                 target = date(midpoint.year, midpoint.month, 15)
                 score = (abs((midpoint - target).days), -(epoch_end - epoch_start).days, filename)
-                candidate = DownloadSpec(urljoin(page, href), filename, page)
+                joined = urlsplit(urljoin(page, href))
+                encoded_url = urlunsplit(
+                    (joined.scheme, joined.netloc, quote(joined.path, safe="/%:@"), joined.query, joined.fragment)
+                )
+                candidate = DownloadSpec(encoded_url, filename, page)
                 if midpoint_period not in discovered or score < discovered[midpoint_period][0]:
                     discovered[midpoint_period] = (score, candidate)
     return [discovered[period][1] for period in sorted(discovered)]
