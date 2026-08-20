@@ -321,3 +321,29 @@ def write_mask_netcdf(
         dataset.mask_metadata = json.dumps(masks.metadata, sort_keys=True)
         dataset.source_hashes = json.dumps(dict(source_hashes or {}), sort_keys=True)
     return path
+
+
+def read_mask_netcdf(path: Path) -> ContinentMaskSet:
+    """Load a previously written auditable continent-mask NetCDF."""
+    with Dataset(path) as dataset:
+        names_by_id = json.loads(dataset.region_names)
+        region_names = tuple(
+            names_by_id[str(index)] for index in range(1, len(names_by_id) + 1)
+        )
+        metadata = json.loads(getattr(dataset, "mask_metadata", "{}"))
+        return ContinentMaskSet(
+            lat=np.asarray(dataset.variables["lat"][:], dtype=float),
+            lon=np.asarray(dataset.variables["lon"][:], dtype=float),
+            region_names=region_names,
+            region_id=np.asarray(dataset.variables["region_id"][:], dtype=np.int16),
+            land_mask=np.asarray(dataset.variables["land_mask"][:], dtype=bool),
+            distance_to_coast_km=np.asarray(
+                np.ma.filled(dataset.variables["distance_to_coast_km"][:], np.nan),
+                dtype=float,
+            ),
+            coastal_buffer_excluded=np.asarray(
+                dataset.variables["coastal_buffer_excluded"][:], dtype=bool
+            ),
+            cell_area_m2=np.asarray(dataset.variables["cell_area_m2"][:], dtype=float),
+            metadata=metadata,
+        )
