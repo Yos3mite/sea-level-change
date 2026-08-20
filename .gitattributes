@@ -1,0 +1,2 @@
+data_release/jin2026_figure1_figure2_custom_l3/custom_l3/product/*.nc filter=lfs diff=lfs merge=lfs -text
+data_release/jin2026_figure1_figure2_custom_l3/custom_l3/product/*.npz filter=lfs diff=lfs merge=lfs -text

@@ -1,0 +1,55 @@
+{
+  "version": "figure02-custom-l3-imssa-figure1-v6-0.2.0",
+  "inputs": {
+    "figure1_data": "data_release/jin2026_figure1_figure2_custom_l3/custom_l3/figure1_v6/figure01_original_sagea_control_imssa_gia_wtc_paperlayout_data_201311_202410_normalized.csv",
+    "oni": "data_release/jin2026_figure1_figure2_custom_l3/paper_reproduction/climate_indices/ONI_NOAA_CPC_oni_v5_20260816.ascii.txt"
+  },
+  "panels": [
+    {
+      "id": "elnino_2014_2016",
+      "title": "2014-2016 El Nino",
+      "display_start": "2013-11",
+      "display_end": "2016-10",
+      "expected_months": 36,
+      "development_start": "2014-10",
+      "development_end": "2015-12",
+      "paper_reference_changes_mm": {
+        "gmsl": 9.16,
+        "custom_l3": 6.20,
+        "steric": 3.11,
+        "budget_sum": 9.31
+      }
+    },
+    {
+      "id": "elnino_2023_2024",
+      "title": "2023-2024 El Nino",
+      "display_start": "2021-11",
+      "display_end": "2024-10",
+      "expected_months": 36,
+      "development_start": "2023-05",
+      "development_end": "2023-12",
+      "paper_reference_changes_mm": {
+        "gmsl": 7.70,
+        "custom_l3": 6.26,
+        "steric": 1.60,
+        "budget_sum": 7.86
+      }
+    }
+  ],
+  "exclusions": {
+    "figure_level_gap_filling": "not applied; use the upstream Improved MSSA Level-3 values",
+    "obd": "not added to mass + steric",
+    "forward_sensitivity": "not used in the main Figure 2 panels",
+    "iterative_ocean_reconstruction": "excluded because the converged solution failed physical-stability validation"
+  },
+  "output": {
+    "directory": "results/figure02_original_sagea_control_imssa_figure1_v6",
+    "png": "figure02_original_sagea_control_imssa_figure1_v6.png",
+    "pdf": "figure02_original_sagea_control_imssa_figure1_v6.pdf",
+    "data_csv": "figure02_original_sagea_control_imssa_figure1_v6_data.csv",
+    "metrics_csv": "figure02_original_sagea_control_imssa_figure1_v6_metrics.csv",
+    "config_snapshot": "figure02_original_sagea_control_imssa_figure1_v6_config_snapshot.json",
+    "method_report": "figure02_original_sagea_control_imssa_figure1_v6_method_report.md",
+    "manifest": "figure02_original_sagea_control_imssa_figure1_v6_run_manifest.json"
+  }
+}

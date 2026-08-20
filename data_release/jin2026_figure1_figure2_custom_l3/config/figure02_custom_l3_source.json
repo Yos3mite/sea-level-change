@@ -1,0 +1,55 @@
+{
+  "version": "figure02-custom-l3-target-b-0.1.0",
+  "inputs": {
+    "figure1_data": "results/figure01_custom_l3_20260820_v2/figure01_custom_l3_data_201311_202410.csv",
+    "oni": "data/external_downloads/climate_indices/ONI_NOAA_CPC_oni_v5_20260816.ascii.txt"
+  },
+  "panels": [
+    {
+      "id": "elnino_2014_2016",
+      "title": "2014–2016 El Niño",
+      "display_start": "2013-11",
+      "display_end": "2016-10",
+      "expected_months": 36,
+      "development_start": "2014-10",
+      "development_end": "2015-12",
+      "paper_reference_changes_mm": {
+        "gmsl": 9.16,
+        "custom_l3": 6.20,
+        "steric": 3.11,
+        "budget_sum": 9.31
+      }
+    },
+    {
+      "id": "elnino_2023_2024",
+      "title": "2023–2024 El Niño",
+      "display_start": "2021-11",
+      "display_end": "2024-10",
+      "expected_months": 36,
+      "development_start": "2023-05",
+      "development_end": "2023-12",
+      "paper_reference_changes_mm": {
+        "gmsl": 7.70,
+        "custom_l3": 6.26,
+        "steric": 1.60,
+        "budget_sum": 7.86
+      }
+    }
+  ],
+  "exclusions": {
+    "gap_filling": "not applied",
+    "obd": "not added to mass + steric",
+    "forward_sensitivity": "not used in the main Figure 2 panels",
+    "iterative_ocean_reconstruction": "excluded because the converged solution failed physical-stability validation"
+  },
+  "output": {
+    "directory": "results/figure02_custom_l3_20260820",
+    "png": "figure02_custom_l3.png",
+    "pdf": "figure02_custom_l3.pdf",
+    "data_csv": "figure02_custom_l3_data.csv",
+    "metrics_csv": "figure02_custom_l3_metrics.csv",
+    "config_snapshot": "figure02_custom_l3_config_snapshot.json",
+    "method_report": "figure02_custom_l3_method_report.md",
+    "manifest": "figure02_custom_l3_run_manifest.json"
+  }
+}

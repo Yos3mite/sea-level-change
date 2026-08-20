@@ -1,0 +1,746 @@
+{
+  "baseline": {
+    "file_count": 94,
+    "imported_module_paths": {
+      "Enums": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\pristine_sagea_20260820\\SaGEA-main\\pysrc\\auxiliary\\preference\\EnumClasses.py",
+      "LoadL2LowDeg": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\pristine_sagea_20260820\\SaGEA-main\\pysrc\\auxiliary\\load_file\\LoadL2LowDeg.py",
+      "LoadL2SH": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\pristine_sagea_20260820\\SaGEA-main\\pysrc\\auxiliary\\load_file\\LoadL2SH.py",
+      "SHC": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\pristine_sagea_20260820\\SaGEA-main\\pysrc\\data_class\\SHC.py",
+      "TimeTool": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\pristine_sagea_20260820\\SaGEA-main\\pysrc\\auxiliary\\aux_tool\\TimeTool.py"
+    },
+    "resolved_path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\pristine_sagea_20260820\\SaGEA-main",
+    "source_archive": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3).zip",
+    "source_archive_sha256": "b2b0d18a93d735365baaa370f39ea5b1913fd9e86a79025d4779fe1bfd012023"
+  },
+  "config_path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\config\\original_sagea_control_imssa_caron2018_201311_202410.json",
+  "config_sha256": "12a366ed7920d15fcf86737811742c0f8f93494953683176d8da18187829a1da",
+  "effective_parameters": {
+    "additional_filter": "none; input already DDK1",
+    "gia_model": "Caron et al. (2018)",
+    "lmax": 60,
+    "mssa_rank": 14,
+    "mssa_window_months": 60
+  },
+  "input_audit": {
+    "context_month_count": 155,
+    "inputs": [
+      {
+        "month": "2013-01",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2013001-2013031_GRAC_UTCSR_BA01_0600.gfc",
+        "sha256": "37da7a8d495000916369605f6778614e74decd2258ee497028b9e6053c26d6d4"
+      },
+      {
+        "month": "2013-02",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2013032-2013057_GRAC_UTCSR_BA01_0600.gfc",
+        "sha256": "6c21618f5c3ad662a7f16fc35b4e56e051abae29e16a99766da2eecbd8ae56d8"
+      },
+      {
+        "month": "2013-04",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2013101-2013120_GRAC_UTCSR_BA01_0600.gfc",
+        "sha256": "850c0d7455c38a69dc541074fe2a2933001692813807874d0a3a92be626dff74"
+      },
+      {
+        "month": "2013-05",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2013121-2013151_GRAC_UTCSR_BA01_0600.gfc",
+        "sha256": "957eaad03e30fab7ac51362db7257d148bc00212144d2b9a3ea3b9ca74506ee8"
+      },
+      {
+        "month": "2013-06",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2013152-2013181_GRAC_UTCSR_BA01_0600.gfc",
+        "sha256": "b490d4e88dbd0419e115ff7e1975db9769e350cb30db4b57c0f3218450b3c535"
+      },
+      {
+        "month": "2013-07",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2013182-2013212_GRAC_UTCSR_BA01_0600.gfc",
+        "sha256": "1681684aa3a688b985bb7fcb8a73150090e70c58fce716f683bf24cbe1102c43"
+      },
+      {
+        "month": "2013-10",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2013274-2013304_GRAC_UTCSR_BA01_0600.gfc",
+        "sha256": "6d40d1820f4899017b66efe2c0bd3ba68a0373bb825de90356f1a599b2c927aa"
+      },
+      {
+        "month": "2013-11",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2013305-2013334_GRAC_UTCSR_BA01_0600.gfc",
+        "sha256": "436572ba66de3ded3cb1bf8d68e13c930b4b808d5d618afee02516a61a1bb873"
+      },
+      {
+        "month": "2013-12",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2013335-2013365_GRAC_UTCSR_BA01_0600.gfc",
+        "sha256": "ee661de2fdd4d06f5cd7f38b725b26aa89a7e1ff3f51d662e38301e9a10a3edb"
+      },
+      {
+        "month": "2014-01",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2014001-2014016_GRAC_UTCSR_BA01_0600.gfc",
+        "sha256": "9304ef891f2e2ddb421fadd19d9e0c4297ffb1203fa091b9ccb4129036e25d56"
+      },
+      {
+        "month": "2014-03",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2014062-2014090_GRAC_UTCSR_BA01_0600.gfc",
+        "sha256": "b2da91c3adbfcf0219738976c25f8ecbffa9a8e887a7379e086be719f8aef1c0"
+      },
+      {
+        "month": "2014-04",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2014091-2014120_GRAC_UTCSR_BA01_0600.gfc",
+        "sha256": "dda70b555b6aef713f1c363a09a9c23adc4eb13be50982988f5836edf7715102"
+      },
+      {
+        "month": "2014-05",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2014121-2014151_GRAC_UTCSR_BA01_0600.gfc",
+        "sha256": "557c25140744a8aadd43a5c771028ba46ae2bfc94c0aba66f7db4f824c230056"
+      },
+      {
+        "month": "2014-06",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2014152-2014175_GRAC_UTCSR_BA01_0600.gfc",
+        "sha256": "6b9bad34c035281236d25d2855c9105769cc8b777ee9625a108cfd7f0ca1fda0"
+      },
+      {
+        "month": "2014-08",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2014213-2014243_GRAC_UTCSR_BA01_0600.gfc",
+        "sha256": "3299d03681b08a3e4169e76bd3be8853aa0714b8a80db3e618bd275e4887a528"
+      },
+      {
+        "month": "2014-09",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2014244-2014273_GRAC_UTCSR_BA01_0600.gfc",
+        "sha256": "ccd575a41e300e196d2ebc843eeebfce0329b4301330150f567fe10949c54398"
+      },
+      {
+        "month": "2014-10",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2014274-2014304_GRAC_UTCSR_BA01_0600.gfc",
+        "sha256": "9b5a6b5d95128e8f46c6499ec8e3c143be871d0f79b31c1d671b8470cf1631b9"
+      },
+      {
+        "month": "2014-11",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2014305-2014334_GRAC_UTCSR_BA01_0600.gfc",
+        "sha256": "e628c1b26f23f707bf0cfcda655b5c5c9a18d766349d5c7cf743d028d4d392f8"
+      },
+      {
+        "month": "2015-01",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2015013-2015031_GRAC_UTCSR_BA01_0600.gfc",
+        "sha256": "1fd12cb8d5ce9d2461f091f361cb69ff81e53dce07bbdabf3f31d300fa164a91"
+      },
+      {
+        "month": "2015-02",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2015032-2015059_GRAC_UTCSR_BA01_0600.gfc",
+        "sha256": "65c4fbff8566d339291e4d127b20e7c9c5d33eeed23592d5de9e975a32314496"
+      },
+      {
+        "month": "2015-03",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2015060-2015090_GRAC_UTCSR_BA01_0600.gfc",
+        "sha256": "8320559aee355cf06e1799ef409597c48d1ce2ee8cdfe84fbc9bde5d04db0c8f"
+      },
+      {
+        "month": "2015-04",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2015091-2015120_GRAC_UTCSR_BA01_0600.gfc",
+        "sha256": "6de3767a8fb3c61c37ee0d8b0f1e525111bac3218be57a2a94f45baf92f43b14"
+      },
+      {
+        "month": "2015-07",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2015180-2015212_GRAC_UTCSR_BA01_0600.gfc",
+        "sha256": "94af28e2705ab4baf1e01ccfd578e3b0168a5f6daf132a667781c970063b6a65"
+      },
+      {
+        "month": "2015-08",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2015213-2015243_GRAC_UTCSR_BA01_0600.gfc",
+        "sha256": "abd62e360a9c0cc28f9d72539f50839c16f303d546e1ec7dcf225a987cf5e170"
+      },
+      {
+        "month": "2015-09",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2015244-2015270_GRAC_UTCSR_BA01_0600.gfc",
+        "sha256": "66c173bcd69868250705ba65ab760c6d169253a9cc34c1ce4919932edfb74d5c"
+      },
+      {
+        "month": "2015-12",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2015345-2016003_GRAC_UTCSR_BA01_0600.gfc",
+        "sha256": "1c3eb54b8e3f23bc51f33e94ea427c089b2c13caa57f89844b1f494ca4d5529c"
+      },
+      {
+        "month": "2016-01",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2016004-2016028_GRAC_UTCSR_BA01_0600.gfc",
+        "sha256": "d8db66df53aa9ec30aac63f112d2142f64aea6cb4fb680cc12acc6f95bac8aac"
+      },
+      {
+        "month": "2016-02",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2016029-2016060_GRAC_UTCSR_BA01_0600.gfc",
+        "sha256": "8812edbc6acda12777caf96bd52c28d65492e39f98167c017eedd1fee58a12e8"
+      },
+      {
+        "month": "2016-03",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2016061-2016091_GRAC_UTCSR_BA01_0600.gfc",
+        "sha256": "e3b28251c4bf0a1001edb112bc7ac45b19b33c341ea5962615806c6bbb62dccf"
+      },
+      {
+        "month": "2016-05",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2016129-2016152_GRAC_UTCSR_BA01_0600.gfc",
+        "sha256": "ac1a2a0b65b58fdecc1d1a18903a0fccfe7ed01eaa7ef888260a8139d852c709"
+      },
+      {
+        "month": "2016-06",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2016153-2016182_GRAC_UTCSR_BA01_0600.gfc",
+        "sha256": "e7efc1d3aebac530d2460c0cbac2a69ffc56509b70dfc126d656378b517771fd"
+      },
+      {
+        "month": "2016-07",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2016183-2016211_GRAC_UTCSR_BA01_0600.gfc",
+        "sha256": "6f7ccdba012b40e92237e597a0f9e151bc45074dc001dd18113e2b290c60ad70"
+      },
+      {
+        "month": "2016-08",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2016221-2016247_GRAC_UTCSR_BA01_0600.gfc",
+        "sha256": "888a5e328040f431ae9ccf6096681176cdbbbd4d333aff659f0c208b5cb38e4a"
+      },
+      {
+        "month": "2016-11",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2016319-2016345_GRAC_UTCSR_BA01_0600.gfc",
+        "sha256": "7617b843d133303e296bfa53da191a6742447b63a1c27aae603153434645f686"
+      },
+      {
+        "month": "2016-12",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2016346-2017006_GRAC_UTCSR_BA01_0600.gfc",
+        "sha256": "c73229eb92e5f5c252f55b1cefb8364a7676f0a4c8ac28a28a55a7ad9581a380"
+      },
+      {
+        "month": "2017-01",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2017007-2017034_GRAC_UTCSR_BA01_0600.gfc",
+        "sha256": "6c5d5a545c88a86487982403c8449165d776c18d04beef4e5a5e94ff82c4a658"
+      },
+      {
+        "month": "2017-03",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2017076-2017104_GRAC_UTCSR_BA01_0600.gfc",
+        "sha256": "9f3c4f57d1d289c87d253ed65610d20ba3dec77b4420e49e2a2b3cc68ddc40d5"
+      },
+      {
+        "month": "2017-04",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2017100-2017128_GRAC_UTCSR_BA01_0600.gfc",
+        "sha256": "9d28c553f9681a0349cde0e45ec125ab5597a9ed89fe3f787b07e068e3e627da"
+      },
+      {
+        "month": "2017-05",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2017123-2017142_GRAC_UTCSR_BA01_0600.gfc",
+        "sha256": "4144c738fd538a28867622e46f7f915cbf0e5e791b0295c89c7877c2ba77c10e"
+      },
+      {
+        "month": "2017-06",
+        "path": "D:\\temp_sealevel_data\\grace_csr_ddk1\\kfilter_DDK1_GSM-2_2017143-2017179_GRAC_UTCSR_BA01_0600.gfc",
+        "sha256": "4053cb11aa7188cc380987c02cc7c0b2bedc04a63c21ec4f06972851f5c415f3"
+      },
+      {
+        "month": "2018-06",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2018152-2018181_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "0835d665ce5537c983e55f4472c3ff5984d3249652b06e62186026c6de18fe9d"
+      },
+      {
+        "month": "2018-07",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2018182-2018199_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "e8c53b0cef123e644dc46640f0ae2f8fc6bcc69be9cd8e9d3bc6b89c118d664e"
+      },
+      {
+        "month": "2018-10",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2018295-2018313_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "a43d0cedadc72d6aec329ce4ed6017908decc0a56e06440b9a067631763b9fa3"
+      },
+      {
+        "month": "2018-11",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2018305-2018334_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "5b1870d412eb90950f4ddd0872cde574a42330ab2ea01ca40c3e9cedc0ac6795"
+      },
+      {
+        "month": "2018-12",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2018335-2018365_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "7df5ff498ecbc3b2a396ad6e23a8b17b835438d87b69eb5a14ae98d4686fb428"
+      },
+      {
+        "month": "2019-01",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2019001-2019031_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "fdac7e2ed2734deb38f1e7262c6b4bf2169b24ebb8f01c6443a9fbfbac010526"
+      },
+      {
+        "month": "2019-02",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2019026-2019066_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "876c62fb1a9af27f664c9772650614d84125582951af5b6798dd93afb392b7d9"
+      },
+      {
+        "month": "2019-03",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2019060-2019090_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "21688c3d16d652696a12f22a4f86aa750445c7cdc1e19c7bd528141c0ec73d88"
+      },
+      {
+        "month": "2019-04",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2019091-2019120_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "bb6f9b3ff93c00e00e1eb82e83103b52753f39cf006cba734ada1648c097019f"
+      },
+      {
+        "month": "2019-05",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2019121-2019151_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "2fd75b53482390864be3e4f64ea34e666ba80b8ae96f71d283aa5c701dc4edc5"
+      },
+      {
+        "month": "2019-06",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2019152-2019181_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "7d4cccd7bcd1cb4293971d2749a135394234be6fc033abd5d384066ced93a8de"
+      },
+      {
+        "month": "2019-07",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2019182-2019212_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "d9f9ae611beba5a0703ea96877eed724b49e91089a3d9bd7c82039086f927d95"
+      },
+      {
+        "month": "2019-08",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2019213-2019243_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "bf7eb2055bfb0cdacee34207de1f86bfbee0d54d010d4d6bfc66d8c7cdd6a69e"
+      },
+      {
+        "month": "2019-09",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2019244-2019273_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "52acaaf45862aa12ff29fb4320c5173fb36221c7c47e11c2bc6e564bec963712"
+      },
+      {
+        "month": "2019-10",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2019274-2019304_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "37fb306da2ec8ba9992be9ba27a96a09226f3493ae138beec64ef7e5b127574f"
+      },
+      {
+        "month": "2019-11",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2019305-2019334_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "aacb692ed42b76d4754e4bde02ed4dac8cecbaedc3c81cba26770f8cdf375136"
+      },
+      {
+        "month": "2019-12",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2019335-2019365_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "76e97d53991520a73f54f1f0677baf0e07b942f431593891a4924290c56a0811"
+      },
+      {
+        "month": "2020-01",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2020001-2020031_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "9b94d63799c98f936c71e9e2024a80afd870f31d1d790e097aaf959060ff6cc1"
+      },
+      {
+        "month": "2020-02",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2020032-2020060_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "0bcbfd99b29971b9dc4a4c29b2393ffbdde442d33b1317db2f828df9829651a4"
+      },
+      {
+        "month": "2020-03",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2020061-2020091_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "7a0fec85e900179f4bb4075b4a344ec0f929e70a8daa1e65c0620cf6512d6416"
+      },
+      {
+        "month": "2020-04",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2020092-2020121_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "04afa851f0b1ac1c5cb45c5f527605bfd822a2779365c133bdd52abf6dc8266f"
+      },
+      {
+        "month": "2020-05",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2020122-2020152_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "0e150c1ece86e992d4aa642f756b90680943c939c81923388fb04ec4288cd658"
+      },
+      {
+        "month": "2020-06",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2020153-2020182_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "0cc4aa14ba1396d8c4c269b33d1f406149ba8332f657d856cccb94f819db0712"
+      },
+      {
+        "month": "2020-07",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2020183-2020213_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "111fd0a2aac5fd98ca6e76bd5694e1bc8ee49cb5dd06206533c0b5c7ca00cdba"
+      },
+      {
+        "month": "2020-08",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2020214-2020244_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "4d41cd5d68107f88227666780367e883ecae124b7546c48b3546cf3d70f313f3"
+      },
+      {
+        "month": "2020-09",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2020245-2020274_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "3f76aa0a1f394c1dd16f8af4cce73cd7fd4c5414287824498801987e9ca74925"
+      },
+      {
+        "month": "2020-10",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2020275-2020305_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "47bab45fcce934a26d903e3345c2ffe772c9f684c26118d4705642a736b2b262"
+      },
+      {
+        "month": "2020-11",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2020306-2020335_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "8ecdf46db93d496a8b7b778b03bc47d5d4d780fcecae8706b5ae98040c55f88b"
+      },
+      {
+        "month": "2020-12",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2020336-2020366_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "4c1a0d01d6f8ed399e737c50d91c5071787f1a38bd34421286c39f6c628274f7"
+      },
+      {
+        "month": "2021-01",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2021001-2021031_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "224b1505aa63d903bd8ef7c17246b0f77fb56ae9d58dbfd2f0736834e4b7333d"
+      },
+      {
+        "month": "2021-02",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2021032-2021059_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "23c5b6b21267679ca520b4cd0b5a6eea8251851da99505ec27a5f488eb5d0ffb"
+      },
+      {
+        "month": "2021-03",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2021060-2021090_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "d5c63ee6510194ffcb65e9431e16e705e21e5978ebce5b57852fdaf7bc401763"
+      },
+      {
+        "month": "2021-04",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2021091-2021120_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "e10893f7658b08a3ec79141899a021c30a65b1b9477bfd5536876a93a7675d14"
+      },
+      {
+        "month": "2021-05",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2021121-2021151_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "26322e02592a3b2b12cb76e89cb87827aa7a3c679ff8d1e6fe37113497045cac"
+      },
+      {
+        "month": "2021-06",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2021152-2021181_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "f1ca3e10fa9412cfc3d4e6856652a4f75345741e1c565193bf34542742673d87"
+      },
+      {
+        "month": "2021-07",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2021182-2021212_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "3097744d76dd96f8fb6bc12b2ec31f2bbd118d7d144e18554ce1ea8ac7b3423a"
+      },
+      {
+        "month": "2021-08",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2021213-2021243_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "32f8bab4b333f5a7c7763d4dffdb450562b6ee5f03fd9155829dde674cfe413b"
+      },
+      {
+        "month": "2021-09",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2021244-2021273_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "9bf57f3899eb554696f28df5641d2fc3c1724b12e3d97ee5b86d380b535e3653"
+      },
+      {
+        "month": "2021-10",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2021274-2021304_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "2afe215a76665ca3ff8c9c18226920e5c32a299bbb617cb0456fa1b812c20818"
+      },
+      {
+        "month": "2021-11",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2021305-2021334_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "51ac35be8146ad44dbd0fd0a48aec1a79af404e86883cec2df6941adda6deb86"
+      },
+      {
+        "month": "2021-12",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2021335-2021365_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "4538fa3e3a04114ab771c783c920fd8bc72d4398dde8b797d593bf5b72417c17"
+      },
+      {
+        "month": "2022-01",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2022001-2022031_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "b3ba9fd2afb7ac0ddfe9c356b2e44372896e6f304473754b3e3cd6297f5e00f2"
+      },
+      {
+        "month": "2022-02",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2022032-2022059_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "2655f41d8e10e35843eeebb01517b9481d8cf563b0e2a48cfa956e6d48d3df25"
+      },
+      {
+        "month": "2022-03",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2022060-2022090_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "f16a524ee34dc300fe505a58d26bb1d9205d7691a630d9f4e9301c80b380a603"
+      },
+      {
+        "month": "2022-04",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2022091-2022120_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "d1bc729a6fd5b721053638f748a97ad43d577b7526987590292db3d2f5128e81"
+      },
+      {
+        "month": "2022-05",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2022121-2022151_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "dcf006caf524e6c84d5078ac1a650d75b918f0012efec90de849df8a6e5c5363"
+      },
+      {
+        "month": "2022-06",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2022152-2022181_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "27a99f64b00e967cd0c8ce6741d2454c8814e314a509a921378cebc845191633"
+      },
+      {
+        "month": "2022-07",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2022182-2022212_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "420df8d55aff916100d08b581ee1c4cc9149d0fccfcc04cb4f6e8cdd4a815d87"
+      },
+      {
+        "month": "2022-08",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2022213-2022243_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "7346a8fe54396c880790caf1e37ab16ba2bd1f55b5be5c4d0bc39ec5d493330b"
+      },
+      {
+        "month": "2022-09",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2022244-2022273_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "c7987eb810da459d39aa88ba9d2dd91ed672a05741b86760ec3c10d53b9892bf"
+      },
+      {
+        "month": "2022-10",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2022274-2022304_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "9ae09211f80d9e17d1d00160286e5fbc18c833430215f59d8769d69b5742725f"
+      },
+      {
+        "month": "2022-11",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2022305-2022334_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "afe6656ddc262b86d3c64843724e5e57fb95d557c28eb5c116c5821eb49d3525"
+      },
+      {
+        "month": "2022-12",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2022335-2022365_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "2dc931938ba628add2e10ebb8ab7a9c2066677129849bf9c0b5cf725bb7de0a3"
+      },
+      {
+        "month": "2023-01",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2023001-2023031_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "5694e69c5155a528f289a9a3c5d903ce15577bedd254028a1734f919dae98c14"
+      },
+      {
+        "month": "2023-02",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2023032-2023059_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "3b212e6ba273a15391924204c1f79d32eff4204a54a6667442d8b0bea7371e91"
+      },
+      {
+        "month": "2023-03",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2023060-2023090_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "44de0157b69881bbd953e32b2d0e98359b216aa394b2420008039cb14993383f"
+      },
+      {
+        "month": "2023-04",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2023091-2023120_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "d009b6f0865d2f14c7a59956fe54312094c50a88feb93f8cdf51d40beb0505ff"
+      },
+      {
+        "month": "2023-05",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2023121-2023151_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "83cfb554cc39fd83cc380bb02ddd911f122abab8e08ba3b4902e8bf4fdf50290"
+      },
+      {
+        "month": "2023-06",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2023152-2023181_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "4fb5b4a497d4a8c8d80a024f3943b6523293136f60292407a94c6a5745bc3a3e"
+      },
+      {
+        "month": "2023-07",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2023182-2023212_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "1ef8dfe49d6e57f3468051edd2781eaafb8da6eaac04176d7f6ace9cb091b993"
+      },
+      {
+        "month": "2023-08",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2023213-2023243_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "08b1ade51a94ee73a4010ba4599d398356f6477759df523ad04f5ce704838a8c"
+      },
+      {
+        "month": "2023-09",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2023244-2023273_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "3102b1d4f25cb80b6fbeff156b112c62c568c02af51d8e5c8c9eeb323c54f570"
+      },
+      {
+        "month": "2023-10",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2023274-2023304_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "27b467883f1a0ea004ed954b14d612d347f5e0349b35d0b7b2835ab10aaf451d"
+      },
+      {
+        "month": "2023-11",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2023305-2023334_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "7989bf55aaa44b9870733b0a19685580a2576725d8886e0d0ca91b7541c8e6be"
+      },
+      {
+        "month": "2023-12",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2023335-2023365_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "3e2ec42c628c47e1a6f89a087b43871688d4fecfb734405d884820f4acf714b4"
+      },
+      {
+        "month": "2024-01",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2024001-2024031_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "b57d64ff709890aab0767c6ba8df04bc9d3659940a375115cc9c0465ef5256f8"
+      },
+      {
+        "month": "2024-02",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2024032-2024060_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "bb1e6cba09e2641d86e1e110c3377cefdd4498795d14b03ecbead686165fd6d5"
+      },
+      {
+        "month": "2024-03",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2024061-2024091_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "01dcc9c8e3130ec54c18f41747b56724026874e3b8d9528de995c31800c017a7"
+      },
+      {
+        "month": "2024-04",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2024092-2024121_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "5a5cceff46534ca3438903fba8fead591e5bd686e2bebfe2b04f28d443bbdda8"
+      },
+      {
+        "month": "2024-05",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2024122-2024152_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "ef298501a6c8dffcea492ae357fc3f766cc734e6a922a347492312d70e4a8d04"
+      },
+      {
+        "month": "2024-06",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2024153-2024182_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "ef88b965c252797eafe95d1fbc68da39e0cc31835649f671a5f8027428420b3a"
+      },
+      {
+        "month": "2024-07",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2024183-2024213_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "b46f2f174dda6dcd7c9f2fdfe3d66b10ab497353b5d7fbedab0a43f3be920dd4"
+      },
+      {
+        "month": "2024-08",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2024214-2024244_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "a41bebef1b07b5d305c6fb03b87eb7563877134c92c360bd1ae38a232b71e65f"
+      },
+      {
+        "month": "2024-09",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2024245-2024274_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "532a70b183c5470c5879ca2da2ec617cb18daac9ae28c357907ce8ebda1e1e2e"
+      },
+      {
+        "month": "2024-10",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2024275-2024305_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "2c67fa9a4e4044cbba482ec7d3ea5c7a6d0ca1eb1c5624fdee07b2aad11a0d96"
+      },
+      {
+        "month": "2024-11",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2024306-2024335_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "dfc4f49da39222b0307c1e15c19391c422abe98ceae8dea8528b726b5f6103ff"
+      },
+      {
+        "month": "2024-12",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2024336-2024366_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "43d503db0744032fa6cdd56ca35fb1678c69e6a9f3b1964f93066bf598c5797f"
+      },
+      {
+        "month": "2025-01",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2025001-2025031_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "ae26bdf969cec62852ba0245f4932667a5f67de9252d5de8012fa240201cefe3"
+      },
+      {
+        "month": "2025-02",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2025032-2025059_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "a32bc5a35c18d48b8310a9da75606554160a1a64e7efd1a5f321c23b178eceb4"
+      },
+      {
+        "month": "2025-03",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2025060-2025090_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "264f75b47b773578dcb56c1f28e1c8144d81c5bcd7553080b3a546da64f55cc4"
+      },
+      {
+        "month": "2025-04",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2025091-2025120_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "b55084de6bfb52ff537f62d9dbdcb3e7c997b65180499bfb08e7f5a72ecfc6a3"
+      },
+      {
+        "month": "2025-05",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2025121-2025151_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "6a631fc4d9acc93bee1f1e9cb1feac5e06217ff72f5a15c585fbdc671630ba6c"
+      },
+      {
+        "month": "2025-06",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2025152-2025181_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "ce0637a79d5a1e533bc4543fe10d83f9fefb532838aab31dfc569806a154b085"
+      },
+      {
+        "month": "2025-07",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2025182-2025212_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "74f10bb4234870d0f5da6fcea55ee8ee2fb71a2611b506519c98a6023b4895c9"
+      },
+      {
+        "month": "2025-08",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2025213-2025243_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "e7c593ebef7ac550a7d7533833f24be20dbdecec6f1f19353416a700657c78be"
+      },
+      {
+        "month": "2025-09",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2025244-2025273_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "a282458d668c5b9209cdf3ea0373bc59e0d6ada75279bbea322ca7ef080c0d41"
+      },
+      {
+        "month": "2025-10",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2025274-2025304_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "814848c5722dae154799a0d12feba8023e8117442aef1161deb13fd233709eb3"
+      },
+      {
+        "month": "2025-11",
+        "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\data\\L2_SH_products\\ICGEM\\GSM-2_2025305-2025334_GRFO_UTCSR_BA01_0603.gfc",
+        "sha256": "21940e6db47471b1ce1aea43a200a81746ebe672e0fd09aa94c4ca5732683598"
+      }
+    ],
+    "missing_context_months": [
+      "2013-03",
+      "2013-08",
+      "2013-09",
+      "2014-02",
+      "2014-07",
+      "2014-12",
+      "2015-05",
+      "2015-06",
+      "2015-10",
+      "2015-11",
+      "2016-04",
+      "2016-09",
+      "2016-10",
+      "2017-02",
+      "2017-07",
+      "2017-08",
+      "2017-09",
+      "2017-10",
+      "2017-11",
+      "2017-12",
+      "2018-01",
+      "2018-02",
+      "2018-03",
+      "2018-04",
+      "2018-05",
+      "2018-08",
+      "2018-09"
+    ],
+    "selected_file_count": 128
+  },
+  "output_audit": {
+    "effective_month_count": 132,
+    "elapsed_seconds": 7.10216809999838,
+    "explained_variance_selected": 0.8760625851340341,
+    "observed_coefficients_changed_max_abs": 0.0,
+    "observed_month_count": 108,
+    "reconstructed_month_count": 24
+  },
+  "outputs": [
+    {
+      "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\results\\original_sagea_control_imssa_caron2018_201311_202410\\original_sagea_control_imssa_l3_201311_202410.nc",
+      "role": "level3_netcdf",
+      "sha256": "d4e1676288d5f5849d8b41416b7ad7516c1adecdae794425ba2f354076df5d44",
+      "size_bytes": 55785678
+    },
+    {
+      "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\results\\original_sagea_control_imssa_caron2018_201311_202410\\original_sagea_control_imssa_ocean_mean_201311_202410.csv",
+      "role": "timeseries_csv",
+      "sha256": "bef494d7989fdc78cfc108dc4bfb85579e36738ccf41fbb4ffc57ae567140d79",
+      "size_bytes": 18126
+    },
+    {
+      "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\results\\original_sagea_control_imssa_caron2018_201311_202410\\original_sagea_control_imssa_coefficients_201311_202410.npz",
+      "role": "coefficient_npz",
+      "sha256": "e210c6c4eb375f9ffba08a405ce9f3e6a4a96fe7750e9752714ded050de87460",
+      "size_bytes": 3763186
+    },
+    {
+      "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\results\\original_sagea_control_imssa_caron2018_201311_202410\\original_sagea_control_imssa_method_report.md",
+      "role": "method_report_md",
+      "sha256": "4087987819e690880cef32eec835e78c5f30c000e77810f491ec9bf4a4136824",
+      "size_bytes": 508
+    },
+    {
+      "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\results\\original_sagea_control_imssa_caron2018_201311_202410\\original_sagea_control_imssa_validation_metrics.csv",
+      "role": "validation_metrics_csv",
+      "sha256": "f9cc76ed7eb729c47c7e7910522f4e172d4947e9a4e3aa560411d1a16c42238b",
+      "size_bytes": 2759
+    },
+    {
+      "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\results\\original_sagea_control_imssa_caron2018_201311_202410\\original_sagea_control_imssa_validation_summary.json",
+      "role": "validation_summary_json",
+      "sha256": "ce285ed7c5b54fa15b520337246553152d13b5ca766da456afe95682b21ec728",
+      "size_bytes": 405
+    }
+  ],
+  "processing_version": "original-sagea-pristine-control-imssa-caron2018-0.1.0"
+}

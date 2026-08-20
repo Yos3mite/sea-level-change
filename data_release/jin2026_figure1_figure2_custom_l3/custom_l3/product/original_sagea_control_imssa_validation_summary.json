@@ -1,0 +1,18 @@
+{
+  "candidate_ranks": [
+    8,
+    10,
+    11,
+    12,
+    14
+  ],
+  "fold_count": 4,
+  "literature_rank": 12,
+  "literature_tie_tolerance": 0.02,
+  "long_gap_linear_rmse_mm": 9.900871397843906,
+  "long_gap_relative_improvement": 0.5196837132666323,
+  "long_gap_selected_mssa_rmse_mm": 4.755549785236992,
+  "promote_mssa_over_linear": true,
+  "selected_rank": 14,
+  "window_months": 60
+}

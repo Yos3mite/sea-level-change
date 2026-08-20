@@ -1,0 +1,69 @@
+{
+  "actual": {
+    "budget_identity_max_error_mm": 1.7763568394002505e-15,
+    "budget_sum_trend_mm_per_year": 2.87524035494123,
+    "csr_reference_correlation_vs_custom_l3": 0.8291358326519273,
+    "csr_reference_rmse_vs_custom_l3_mm": 3.4578241915722505,
+    "csr_reference_trend_mm_per_year": 1.2314818620745973,
+    "custom_l3_effective_months": 132,
+    "custom_l3_interpolated_months": 0,
+    "custom_l3_method": "untouched pristine SaGEA control using local CSR DDK1 Level-2, explicit low-degree replacements where available, DDK1-matched Caron et al. (2018) GIA, and the 300 km open-ocean mask; 24 missing Level-2 months reconstructed by direct Improved MSSA with M=60 and rank=14",
+    "custom_l3_missing_months": 24,
+    "custom_l3_reconstructed_months": 24,
+    "custom_l3_smoothed_valid_months": 132,
+    "custom_l3_source_raw_trend_mm_per_year": 1.4478732347443248,
+    "custom_l3_source_registered_trend_mm_per_year": null,
+    "custom_l3_trend_mm_per_year": 1.3874622176441203,
+    "custom_l3_valid_months": 108,
+    "display_offsets_mm": {
+      "panel_a": {
+        "budget_sum": 0.0,
+        "custom_l3": -10.0,
+        "gmsl": 0.0,
+        "steric": -20.0
+      },
+      "panel_b": {
+        "budget_sum": 0.0,
+        "custom_l3": -5.0,
+        "gmsl": 0.0,
+        "steric": -10.0
+      }
+    },
+    "forward_correlation_vs_custom_l3": 0.7276800721954314,
+    "forward_rmse_vs_custom_l3_mm": 4.191901053151257,
+    "forward_trend_mm_per_year": 0.14111892289671898,
+    "gap_fill_method": "none",
+    "gap_filling_applied": false,
+    "gmsl_gia_correction_rate_mm_per_year": -0.414,
+    "gmsl_gia_correction_source": "project-registered correction for the fixed local GMSL reference",
+    "gmsl_trend_mm_per_year": 3.213645517912503,
+    "gmsl_wtc_correction_rate_mm_per_year": -0.5,
+    "iterative_ocean_included": false,
+    "month_count": 132,
+    "mssa_reconstruction_applied": true
+  },
+  "config_path": "config\\figure01_original_sagea_control_imssa.json",
+  "config_sha256": "dc8686839213a95b2c0785939902f4827688a76de8ca7980b10c85302cff9e49",
+  "input_sha256": {
+    "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\results\\original_sagea_control_imssa_caron2018_201311_202410\\original_sagea_control_imssa_ocean_mean_201311_202410.csv": "bef494d7989fdc78cfc108dc4bfb85579e36738ccf41fbb4ffc57ae567140d79",
+    "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\results\\reference_baseline\\reference_timeseries_201311_202410.csv": "94405f5f6f6c60c5e7086a3b291a139d023ddde81230f7aa80e73541f7bc8245",
+    "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\results\\target_b_l2_to_l3_multisource_leakage_forward_max500\\target_b_ocean_mean_multisource_leakage_forward_max500_201311_202410.csv": "688ed97c90e090819724926c94a3e50e093f7a30e297ad8ae5ef70952e991178"
+  },
+  "limitations": [
+    "C3S and SIO are project reference inputs, not guaranteed exact paper versions.",
+    "Custom Level-3 includes explicit Level-2 Improved MSSA reconstructed months; they are not satellite observations and Figure 1 applies no second interpolation.",
+    "Level-3 uncertainty remains NaN because DDK1 covariance is not registered.",
+    "Forward Modeling is a sensitivity and does not replace the no-leakage custom baseline."
+  ],
+  "output_sha256": {
+    "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\results\\figure01_original_sagea_control_imssa_gia_wtc_paperlayout_20260820_v6\\figure01_original_sagea_control_imssa_gia_wtc_paperlayout.pdf": "c5aa66349d353af1956048a2d523120629ab559ef12417204b73225137823427",
+    "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\results\\figure01_original_sagea_control_imssa_gia_wtc_paperlayout_20260820_v6\\figure01_original_sagea_control_imssa_gia_wtc_paperlayout.png": "ee60d58e67ff849f8852e5c7eac078bdc27b31756e575b0378d91ab609999c01",
+    "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\results\\figure01_original_sagea_control_imssa_gia_wtc_paperlayout_20260820_v6\\figure01_original_sagea_control_imssa_gia_wtc_paperlayout_config_snapshot.json": "4c1da3c6ceb2255f080c9daa7deb749ccc8419903805b6334b707c0bd2107a61",
+    "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\results\\figure01_original_sagea_control_imssa_gia_wtc_paperlayout_20260820_v6\\figure01_original_sagea_control_imssa_gia_wtc_paperlayout_data_201311_202410.csv": "893577aae87e72df2922e70fe4de9dd9d6521bf7c4b68b34b33a91fde0101f06",
+    "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\results\\figure01_original_sagea_control_imssa_gia_wtc_paperlayout_20260820_v6\\figure01_original_sagea_control_imssa_gia_wtc_paperlayout_method_report.md": "7cc47572e135839632f9facf8a387eee13f986ef8f977dae834fcf7779ac986d",
+    "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\results\\figure01_original_sagea_control_imssa_gia_wtc_paperlayout_20260820_v6\\figure01_original_sagea_control_imssa_gia_wtc_paperlayout_metrics.csv": "d77a69d85d052cc19ecf30436c29d0cd4d6113105d06fe0906929b6ddf04cfc2",
+    "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\results\\figure01_original_sagea_control_imssa_gia_wtc_paperlayout_20260820_v6\\figure01_original_sagea_control_imssa_gia_wtc_paperlayout_overlay.pdf": "a32af7f54a68a3f31a52e848552d11250200267c075d2f1248e2647f8482153d",
+    "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\results\\figure01_original_sagea_control_imssa_gia_wtc_paperlayout_20260820_v6\\figure01_original_sagea_control_imssa_gia_wtc_paperlayout_overlay.png": "82c38b149269ea4c695fcbf37bf45510fb6fbbb53b77a973ee8691e61eb9e66e"
+  },
+  "processing_version": "figure01-original-sagea-pristine-control-imssa-gia-wtc-paperlayout-0.6.0"
+}

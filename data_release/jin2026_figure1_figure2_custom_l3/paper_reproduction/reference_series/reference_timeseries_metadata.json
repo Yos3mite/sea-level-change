@@ -1,0 +1,21 @@
+{
+  "research_window": [
+    "2013-11",
+    "2024-10"
+  ],
+  "month_count": 132,
+  "gmsl_label": "C3S/CMEMS equivalent reference; not asserted to be the paper's exact primary file",
+  "gmsl_unit": "mm",
+  "steric_units": "mm",
+  "dmi_unit": "degC",
+  "csr_unit": "mm equivalent water height from cm input",
+  "csr_ocean_mask": "union of finite C3S SLA cells over 2013-11 to 2024-10",
+  "noaa_satellites_preserved_separately": [
+    "TOPEX/Poseidon",
+    "Jason-1",
+    "Jason-2",
+    "Jason-3",
+    "Sentinel-6MF"
+  ],
+  "csr_time_attribute_fallback": "Units"
+}

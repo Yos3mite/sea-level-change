@@ -1,0 +1,69 @@
+{
+  "exclusions": {
+    "figure_level_interpolation": "not applied",
+    "forward_role": "Target B Forward Modeling is retained only as an external sensitivity overlay and is not reconstructed or included in the pristine SaGEA control chain",
+    "iterative_ocean_reconstruction": "excluded because the prior converged solution failed physical-stability validation",
+    "obd": "not added to mass + steric; retained for separate budget-closure diagnostics only"
+  },
+  "inputs": {
+    "custom_l3_timeseries": "results/original_sagea_control_imssa_caron2018_201311_202410/original_sagea_control_imssa_ocean_mean_201311_202410.csv",
+    "forward_sensitivity_timeseries": "results/target_b_l2_to_l3_multisource_leakage_forward_max500/target_b_ocean_mean_multisource_leakage_forward_max500_201311_202410.csv",
+    "reference_timeseries": "results/reference_baseline/reference_timeseries_201311_202410.csv"
+  },
+  "labels": {
+    "budget_sum": "Barystatic+Steric",
+    "custom_l3": "Barystatic",
+    "gmsl": "SLA",
+    "overlay_custom_l3": "Original SaGEA ocean mass (Improved MSSA)",
+    "overlay_title": "Figure 1 barystatic input overlay"
+  },
+  "output": {
+    "config_snapshot": "figure01_original_sagea_control_imssa_gia_wtc_paperlayout_config_snapshot.json",
+    "custom_pdf": "figure01_original_sagea_control_imssa_gia_wtc_paperlayout.pdf",
+    "custom_png": "figure01_original_sagea_control_imssa_gia_wtc_paperlayout.png",
+    "data_csv": "figure01_original_sagea_control_imssa_gia_wtc_paperlayout_data_201311_202410.csv",
+    "directory": "results/figure01_original_sagea_control_imssa_gia_wtc_paperlayout_20260820_v6",
+    "manifest": "figure01_original_sagea_control_imssa_gia_wtc_paperlayout_run_manifest.json",
+    "method_report": "figure01_original_sagea_control_imssa_gia_wtc_paperlayout_method_report.md",
+    "metrics_csv": "figure01_original_sagea_control_imssa_gia_wtc_paperlayout_metrics.csv",
+    "overlay_pdf": "figure01_original_sagea_control_imssa_gia_wtc_paperlayout_overlay.pdf",
+    "overlay_png": "figure01_original_sagea_control_imssa_gia_wtc_paperlayout_overlay.png"
+  },
+  "processing": {
+    "budget_identity": "MSSA-reconstructed original SaGEA ocean mass mm + steric mm; OBD excluded",
+    "centering": "subtract each series mean over its own effective finite months",
+    "custom_l3_gap_fill_method": "none",
+    "deseasonalize": true,
+    "display_offsets_mm": {
+      "panel_a": {
+        "budget_sum": 0.0,
+        "custom_l3": -10.0,
+        "gmsl": 0.0,
+        "steric": -20.0
+      },
+      "panel_b": {
+        "budget_sum": 0.0,
+        "custom_l3": -5.0,
+        "gmsl": 0.0,
+        "steric": -10.0
+      }
+    },
+    "expected_gmsl_corrected_trend_mm_per_year": 3.213645517912503,
+    "gmsl_correction_rate_mm_per_year": -0.5,
+    "gmsl_correction_start": "2016-01",
+    "gmsl_gia_correction_rate_mm_per_year": -0.414,
+    "gmsl_gia_correction_source": "project-registered correction for the fixed local GMSL reference",
+    "missing_month_policy": "use explicit upstream Level-2 Improved MSSA reconstruction; no Figure-level interpolation",
+    "running_mean_months": 3
+  },
+  "provenance": {
+    "custom_l3_method": "untouched pristine SaGEA control using local CSR DDK1 Level-2, explicit low-degree replacements where available, DDK1-matched Caron et al. (2018) GIA, and the 300 km open-ocean mask; 24 missing Level-2 months reconstructed by direct Improved MSSA with M=60 and rank=14",
+    "source_run_manifest": "results/original_sagea_control_imssa_caron2018_201311_202410/original_sagea_control_imssa_run_manifest.json",
+    "validation_summary": "results/original_sagea_control_imssa_caron2018_201311_202410/original_sagea_control_imssa_validation_summary.json"
+  },
+  "time": {
+    "end": "2024-10",
+    "start": "2013-11"
+  },
+  "version": "figure01-original-sagea-pristine-control-imssa-gia-wtc-paperlayout-0.6.0"
+}

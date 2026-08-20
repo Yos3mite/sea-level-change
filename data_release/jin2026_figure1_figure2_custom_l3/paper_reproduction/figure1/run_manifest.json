@@ -1,0 +1,123 @@
+{
+  "created_utc": "2026-08-19T19:09:39.063758+00:00",
+  "metrics": [
+    {
+      "component": "gmsl",
+      "computed_curve_trend_mm_per_year": 3.2136592657,
+      "end_time": "2024-10-15T00:00:00.000",
+      "hac_standard_error_mm_per_year": 0.2762106827,
+      "n_obs": 132,
+      "ols_standard_error_mm_per_year": 0.0936480901,
+      "role": "observed altimetry GMSL; OBD excluded",
+      "start_time": "2013-11-15T00:00:00.000",
+      "trend_mm_per_year": 3.2136592657
+    },
+    {
+      "component": "barystatic",
+      "computed_curve_trend_mm_per_year": 1.6736197627,
+      "end_time": "2024-10-15T00:00:00.000",
+      "hac_standard_error_mm_per_year": 0.1789352202,
+      "n_obs": 132,
+      "ols_standard_error_mm_per_year": 0.0808375336,
+      "role": "CSR/JPL/GSFC global no-buffer SSA ensemble",
+      "start_time": "2013-11-15T00:00:00.000",
+      "trend_mm_per_year": 1.6736197627
+    },
+    {
+      "component": "steric",
+      "computed_curve_trend_mm_per_year": 1.4901242744,
+      "end_time": "2024-10-15T00:00:00.000",
+      "hac_standard_error_mm_per_year": 0.1396624935,
+      "n_obs": 132,
+      "ols_standard_error_mm_per_year": 0.0549759095,
+      "role": "SIO total steric validation input",
+      "start_time": "2013-11-15T00:00:00.000",
+      "trend_mm_per_year": 1.4853570806
+    },
+    {
+      "component": "budget_sum",
+      "computed_curve_trend_mm_per_year": 3.1637440371,
+      "end_time": "2024-10-15T00:00:00.000",
+      "hac_standard_error_mm_per_year": 0.2868282782,
+      "n_obs": 132,
+      "ols_standard_error_mm_per_year": 0.1126359062,
+      "role": "barystatic plus steric; OBD excluded",
+      "start_time": "2013-11-15T00:00:00.000",
+      "trend_mm_per_year": 3.1589768433
+    }
+  ],
+  "outputs": {
+    "jin_figure1.pdf": {
+      "sha256": "74adc110800a69be61f3fec13f851c1b11f57b324924bc059f03897aa505f259"
+    },
+    "jin_figure1.png": {
+      "sha256": "ed8032905b7a9c5318745c59aadb4169e6c207fa1e9763c4bd3ca54597b913d9"
+    },
+    "jin_figure1_metrics.csv": {
+      "sha256": "e9946eaf550da37b85e60a7b0ebcbd6c5908905d14449776384033d648160b1e"
+    },
+    "jin_figure1_timeseries.csv": {
+      "sha256": "4b62554431fd6ce5d4d36db1b3cb3a7a9e712ecab08a939554e227556182b98d"
+    },
+    "report.md": {
+      "sha256": "e0f101647aa33c7f8f9b0614129de752209bb3350ea933786e0b9a73184dc94c"
+    }
+  },
+  "processing": {
+    "budget_sum_formula": "barystatic + steric; OBD excluded",
+    "display_offsets_mm": {
+      "panel_a": {
+        "barystatic": -14.0,
+        "budget_sum": 0.0,
+        "gmsl": 0.0,
+        "steric": -22.0
+      },
+      "panel_b": {
+        "barystatic": -5.0,
+        "budget_sum": 0.0,
+        "gmsl": 0.0,
+        "steric": -11.0
+      }
+    },
+    "gmsl_obd_mode": "observed_altimetry",
+    "obd_included_in_gmsl": false,
+    "obd_operation": "excluded from observed altimetry GMSL",
+    "obd_sign_convention": "upward positive",
+    "obd_ssa": {
+      "filled_month_count": 31,
+      "iterations": 77,
+      "rank": 8,
+      "tolerance": 1e-05,
+      "window_months": 36
+    },
+    "running_mean_months": 3,
+    "seasonal": "monthly climatology removed"
+  },
+  "sources": {
+    "budget": {
+      "path": "D:\\AAAA海平面变化\\reproduce_figure1\\output\\optimized_budget\\gmsl-f1a6af32-ccd55ef8-68faa1ee\\monthly_budget.nc",
+      "sha256": "b21adc19ef2bda346d3f3717b3effda372b0237843d5b115cd71acc6cd1c32cf"
+    },
+    "config": {
+      "path": "D:\\AAAA海平面变化\\.worktrees\\gmsl-budget-pipeline\\reproduce_figure1\\configs\\jin_figure1_gmsl_observed.json",
+      "sha256": "7630e46e61bcab4d616cb5fbb1e2d68d586f31fdee7d38ec5cee2eedda976cb8"
+    },
+    "processing_source": {
+      "path": "D:\\AAAA海平面变化\\.worktrees\\gmsl-budget-pipeline\\reproduce_figure1\\gmsl_budget\\jin_figure1.py",
+      "sha256": "74b072fff412d7b049cb5c95142fdd0da142230b4a76f11c670fb2cd6643f8cf"
+    },
+    "steric_index": {
+      "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\results\\steric_trend_results.md",
+      "sha256": "9d2c3e70447a1aadb5a078b99215863d92d5ce73f4a32f6f4c3010245a2f3575"
+    },
+    "steric_reference": {
+      "path": "D:\\AAAA海平面变化\\SaGEA-main(L2-L3)原版\\SaGEA-main\\results\\reference_baseline\\reference_timeseries_201311_202410.csv",
+      "sha256": "94405f5f6f6c60c5e7086a3b291a139d023ddde81230f7aa80e73541f7bc8245"
+    }
+  },
+  "target_period": {
+    "end": "2024-10",
+    "months": 132,
+    "start": "2013-11"
+  }
+}
