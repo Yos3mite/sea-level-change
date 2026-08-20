@@ -1,0 +1,54 @@
+{
+  "source": {
+    "title": "Natural Earth Admin 0 - Countries",
+    "publisher": "Natural Earth",
+    "version": "5.1.1",
+    "url": "https://naturalearthdata.com/downloads/10m-cultural-vectors/10m-admin-0-countries/",
+    "download_url": "https://naturalearth.s3.amazonaws.com/5.1.2/10m_cultural/ne_10m_admin_0_countries.zip",
+    "license": "Public domain under Natural Earth terms of use",
+    "downloaded_at": "2026-08-20T18:33:57+08:00",
+    "note": "The archive's embedded VERSION.txt and README identify the published dataset as 5.1.1. It is a reproducible proxy for the unpublished continent polygons used by Jin et al."
+  },
+  "files": [
+    {
+      "path": "ne_10m_admin_0_countries_v5.1.1.zip",
+      "bytes": 4930492,
+      "sha256": "ce1ac7036499a0edd641fbc093cd209a98f96a49d2eca8480aaacad35138a7f6"
+    },
+    {
+      "path": "ne_10m_admin_0_countries_v5.1.1/ne_10m_admin_0_countries.cpg",
+      "bytes": 5,
+      "sha256": "3ad3031f5503a4404af825262ee8232cc04d4ea6683d42c5dd0a2f2a27ac9824"
+    },
+    {
+      "path": "ne_10m_admin_0_countries_v5.1.1/ne_10m_admin_0_countries.dbf",
+      "bytes": 878482,
+      "sha256": "c5dbd3dd5fd7e2ef49051fc88562c03819e8ea63a382642df6eadd1243bf4b49"
+    },
+    {
+      "path": "ne_10m_admin_0_countries_v5.1.1/ne_10m_admin_0_countries.prj",
+      "bytes": 145,
+      "sha256": "a02a27b1d1982c8516d83398e85a3c8b1aef1713c13ef4d84d7bde17430c07c4"
+    },
+    {
+      "path": "ne_10m_admin_0_countries_v5.1.1/ne_10m_admin_0_countries.README.html",
+      "bytes": 39383,
+      "sha256": "01e711029395bc94936ec82cabf06856f04f7d0e74747351799283c081c6631c"
+    },
+    {
+      "path": "ne_10m_admin_0_countries_v5.1.1/ne_10m_admin_0_countries.shp",
+      "bytes": 8806224,
+      "sha256": "7ce119ef6342e43cff7c0c3004e0911ab7ec1988a14734372031d2012180e7bc"
+    },
+    {
+      "path": "ne_10m_admin_0_countries_v5.1.1/ne_10m_admin_0_countries.shx",
+      "bytes": 2164,
+      "sha256": "ca19ec112d054c77bc8f7ac00e3b110d5dff32cc9bcf4cd1b8b66bdd0f611d32"
+    },
+    {
+      "path": "ne_10m_admin_0_countries_v5.1.1/ne_10m_admin_0_countries.VERSION.txt",
+      "bytes": 7,
+      "sha256": "548358969090d629b41888f5fe664ac31b7203dfd849f7c1ef820ac055b62191"
+    }
+  ]
+}

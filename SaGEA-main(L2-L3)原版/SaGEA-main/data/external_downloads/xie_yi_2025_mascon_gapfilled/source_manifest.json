@@ -1,0 +1,45 @@
+{
+  "source": {
+    "title": "The gap-filling dataset for three GRACE/GRACE-FO mascon solutions",
+    "authors": [
+      "Pu Xie",
+      "Shuang Yi"
+    ],
+    "dataset_doi": "10.6084/m9.figshare.25805092.v2",
+    "article_doi": "10.1016/j.geog.2024.12.004",
+    "version": "2",
+    "url": "https://figshare.com/articles/dataset/The_gap-filling_dataset_for_three_GRACE_GRACE-FO_mascon_solutions/25805092/2",
+    "license": "CC BY 4.0",
+    "coverage": "missing GRACE/GRACE-FO months within 2002-04 through 2022-12",
+    "centers": {
+      "CSR": "RL06.2",
+      "JPL": "CRI-filtered RL06.1v03",
+      "GSFC": "RL06v2.0"
+    },
+    "downloaded_at": "2026-08-20T18:31:16+08:00",
+    "publisher_registered_total_bytes": 65872990,
+    "note": "The archive contains 35 reconstructed missing-month fields per center, not copies of observed months. Original center products remain authoritative for observed months."
+  },
+  "files": [
+    {
+      "path": "mascon solution.zip",
+      "bytes": 65872990,
+      "sha256": "a9a03d46fa41381855a52a0efa76bf07fc071bd413e04293bced19d3e5c34948"
+    },
+    {
+      "path": "mascon solution/mascon_CSR.nc",
+      "bytes": 306911320,
+      "sha256": "8034bdea9b5ac645c9512e5d0b62e1dbe2353004507afdc4fdc873364b8efcbc"
+    },
+    {
+      "path": "mascon solution/mascon_GSFC.nc",
+      "bytes": 76733080,
+      "sha256": "55966e126bf1f89ae8be1ba9fcddbf228a0a27888b5f47223e596e77d7e5a7c3"
+    },
+    {
+      "path": "mascon solution/mascon_JPL.nc",
+      "bytes": 76733080,
+      "sha256": "e27812131636b67f2251d45addb3f0b651840071b83a8530691448b739104dc3"
+    }
+  ]
+}
