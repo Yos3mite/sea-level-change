@@ -52,6 +52,28 @@ _REGION_COLORS = {
 }
 
 
+def target_grid_coordinates(config: Mapping[str, Any]) -> tuple[np.ndarray, np.ndarray]:
+    """Expand either explicit coordinates or a regular center-grid specification."""
+    if "lat" in config and "lon" in config:
+        return np.asarray(config["lat"], dtype=float), np.asarray(
+            config["lon"], dtype=float
+        )
+    spacing = float(config["spacing_deg"])
+    if spacing <= 0:
+        raise ValueError("target-grid spacing must be positive")
+    lat = np.arange(
+        float(config["lat_start"]),
+        float(config["lat_end"]) + spacing / 2.0,
+        spacing,
+    )
+    lon = np.arange(
+        float(config["lon_start"]),
+        float(config["lon_end"]) + spacing / 2.0,
+        spacing,
+    )
+    return lat, lon
+
+
 def _resolve(project_root: Path, value: str | Path) -> Path:
     path = Path(value)
     return path if path.is_absolute() else project_root / path
@@ -328,8 +350,7 @@ def build_figure3(
     if corrections.get("apply_gia") or corrections.get("apply_obd"):
         raise ValueError("Figure 3 regional TWS pipeline applies neither extra GIA nor OBD")
 
-    target_lat = np.asarray(config["target_grid"]["lat"], dtype=float)
-    target_lon = np.asarray(config["target_grid"]["lon"], dtype=float)
+    target_lat, target_lon = target_grid_coordinates(config["target_grid"])
     masks = _load_masks(config["mask"], root, target_lat, target_lon)
     centers, reconstructed_months, input_paths = _load_centers(
         config, root, target_lat, target_lon

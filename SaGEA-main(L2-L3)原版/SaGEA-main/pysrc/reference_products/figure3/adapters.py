@@ -41,6 +41,25 @@ def _as_float_array(variable: Any) -> np.ndarray:
     return np.asarray(np.ma.filled(variable[:], np.nan), dtype=float)
 
 
+def _decode_months(time_variable: Any) -> np.ndarray:
+    raw = np.asarray(time_variable[:])
+    if raw.dtype.kind in {"U", "S", "O"}:
+        months = np.asarray(
+            [
+                value.decode("utf-8") if isinstance(value, bytes) else str(value)
+                for value in raw
+            ],
+            dtype="U7",
+        )
+        return months
+    time_units = _attribute(time_variable, "units", "Units")
+    if not time_units:
+        raise ValueError("numeric time variable is missing units")
+    calendar = _attribute(time_variable, "calendar", "Calendar", default="standard")
+    decoded = num2date(raw, units=time_units, calendar=calendar)
+    return np.asarray([f"{item.year:04d}-{item.month:02d}" for item in decoded])
+
+
 def _load_grid(config: Mapping[str, Any], *, default_status: str) -> MonthlyGridSeries:
     path = Path(config["path"])
     variables = config["variables"]
@@ -48,12 +67,19 @@ def _load_grid(config: Mapping[str, Any], *, default_status: str) -> MonthlyGrid
 
     with Dataset(path) as dataset:
         time_variable = dataset.variables[variables["time"]]
-        time_units = _attribute(time_variable, "units", "Units")
-        if not time_units:
-            raise ValueError("time variable is missing units")
-        calendar = _attribute(time_variable, "calendar", "Calendar", default="standard")
-        decoded = num2date(time_variable[:], units=time_units, calendar=calendar)
-        months = np.asarray([f"{item.year:04d}-{item.month:02d}" for item in decoded])
+        all_months = _decode_months(time_variable)
+        selection = np.ones(all_months.size, dtype=bool)
+        if config.get("time_start") is not None:
+            selection &= all_months >= str(config["time_start"])
+        if config.get("time_end") is not None:
+            selection &= all_months <= str(config["time_end"])
+        selected_indices = np.flatnonzero(selection)
+        if selected_indices.size == 0:
+            raise ValueError("requested time range contains no source months")
+        first_time_index = int(selected_indices[0])
+        final_time_index = int(selected_indices[-1]) + 1
+        selected_within_slice = selection[first_time_index:final_time_index]
+        months = all_months[selection]
 
         lat = _as_float_array(dataset.variables[variables["lat"]])
         lon = _as_float_array(dataset.variables[variables["lon"]])
@@ -61,7 +87,6 @@ def _load_grid(config: Mapping[str, Any], *, default_status: str) -> MonthlyGrid
             raise ValueError("only one-dimensional latitude/longitude grids are supported")
 
         field_variable = dataset.variables[variables["field"]]
-        field = _as_float_array(field_variable)
         desired_dimensions = (
             dimensions["time"],
             dimensions["lat"],
@@ -76,15 +101,23 @@ def _load_grid(config: Mapping[str, Any], *, default_status: str) -> MonthlyGrid
                 f"field dimensions {field_variable.dimensions} do not contain "
                 f"configured dimensions {desired_dimensions}"
             ) from exc
-        if field.ndim != 3:
+        if len(field_variable.dimensions) != 3:
             raise ValueError("field variable must have exactly three dimensions")
+        source_slice = [slice(None)] * 3
+        source_slice[transpose_order[0]] = slice(first_time_index, final_time_index)
+        field = np.asarray(
+            np.ma.filled(field_variable[tuple(source_slice)], np.nan), dtype=float
+        )
         field = np.transpose(field, transpose_order)
+        field = field[selected_within_slice]
 
         source_units = str(
             config.get("units")
             or _attribute(field_variable, "units", "Units", default="")
         ).strip()
         unit_key = source_units.lower()
+        if unit_key.endswith(" ewh"):
+            unit_key = unit_key[: -len(" ewh")].strip()
         if unit_key not in _UNIT_SCALE_TO_MM:
             raise ValueError(f"unsupported water-height units: {source_units!r}")
         field *= _UNIT_SCALE_TO_MM[unit_key]
@@ -98,7 +131,9 @@ def _load_grid(config: Mapping[str, Any], *, default_status: str) -> MonthlyGrid
 
         valid_name = variables.get("valid_month")
         if valid_name:
-            valid_values = np.ma.filled(dataset.variables[valid_name][:], 0)
+            valid_values = np.ma.filled(
+                dataset.variables[valid_name][first_time_index:final_time_index], 0
+            )[selected_within_slice]
             valid_month = np.asarray(valid_values, dtype=bool)
         else:
             valid_month = np.any(np.isfinite(field), axis=(1, 2))

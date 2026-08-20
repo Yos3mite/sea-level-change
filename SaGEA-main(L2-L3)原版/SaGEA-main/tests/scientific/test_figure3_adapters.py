@@ -142,3 +142,60 @@ def test_load_mascon_rejects_unrecognized_water_height_units(tmp_path: Path):
 
     with pytest.raises(ValueError, match="unsupported water-height units"):
         load_mascon(_config(path, status="reconstructed"))
+
+
+def test_load_mascon_can_select_a_requested_month_range(tmp_path: Path):
+    """Catch full multi-decade grids being loaded when only the study window is needed."""
+    path = _write_grid_file(tmp_path / "windowed.nc")
+    config = _config(path)
+    config["time_start"] = "2023-02"
+    config["time_end"] = "2023-02"
+
+    series = load_mascon(config)
+
+    assert series.months.tolist() == ["2023-02"]
+    assert series.ewh_mm.shape == (1, 2, 3)
+
+
+def test_load_custom_l3_accepts_string_months_and_mm_ewh_units(tmp_path: Path):
+    """Catch the project's native custom Level-3 time/unit contract being rejected."""
+    path = tmp_path / "native_custom.nc"
+    with Dataset(path, "w") as dataset:
+        dataset.createDimension("time", 2)
+        dataset.createDimension("latitude", 1)
+        dataset.createDimension("longitude", 1)
+        time = dataset.createVariable("time", str, ("time",))
+        time[:] = np.asarray(["2023-01", "2023-02"], dtype=object)
+        dataset.createVariable("lat", "f8", ("latitude",))[:] = [0.0]
+        dataset.createVariable("lon", "f8", ("longitude",))[:] = [0.0]
+        field = dataset.createVariable("field", "f8", ("time", "latitude", "longitude"))
+        field.units = "mm EWH"
+        with warnings.catch_warnings():
+            warnings.filterwarnings(
+                "ignore",
+                message="Setting the shape on a NumPy array has been deprecated",
+                category=DeprecationWarning,
+            )
+            field[:] = np.asarray([[[1.0]], [[2.0]]])
+        dataset.createVariable("valid_month", "i1", ("time",))[:] = [1, 1]
+    config = {
+        "source_id": "native-custom",
+        "path": str(path),
+        "variables": {
+            "time": "time",
+            "lat": "lat",
+            "lon": "lon",
+            "field": "field",
+            "valid_month": "valid_month",
+        },
+        "dimensions": {
+            "time": "time",
+            "lat": "latitude",
+            "lon": "longitude",
+        },
+    }
+
+    series = load_custom_l3(config)
+
+    assert series.months.tolist() == ["2023-01", "2023-02"]
+    assert series.ewh_mm[:, 0, 0].tolist() == [1.0, 2.0]
